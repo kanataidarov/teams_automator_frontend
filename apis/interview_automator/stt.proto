@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package interview_automator;
+option go_package = "github.com/kanataidarov/interview_automator/pkg/interview_automator";
+
+service SpeechToText {
+  rpc Recognize(SttRequest) returns (SttResponse) {}
+}
+
+message SttRequest {
+  FileHeader header = 1;
+  bytes data = 2;
+}
+
+message FileHeader {
+  string name = 1;
+  optional int64 size = 2;
+}
+
+message SttResponse {
+  string message = 1;
+}

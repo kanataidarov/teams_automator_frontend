@@ -1,0 +1,27 @@
+name: interview_automator_frontend
+description: "Interview Automator"
+publish_to: 'none'
+
+version: 0.0.1
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  avatar_glow: ^3.0.1
+  cupertino_icons: ^1.0.6
+  fixnum: ^1.1.0
+  grpc: ^3.2.4
+  protobuf: ^3.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
