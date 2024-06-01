@@ -1,8 +1,10 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/storage.dart';
 import 'package:logger/logger.dart' show Level, Logger;
+import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
 Logger _logger = Logger(level: Level.debug);
@@ -99,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return Scaffold(
       body: Center(
         child: Column(
@@ -125,12 +127,20 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ElevatedButton(
-                onPressed: () => ClientService.instance
-                    .transcribe(Storage.instance.getRecodingPath()),
-                child: const Text('TRANSCRIBE')),
-            ElevatedButton(
-                onPressed: () => ClientService.instance.chatBot(),
-                child: const Text('CHAT_BOT'))
+                onPressed: () {
+                  ClientService.instance
+                      .transcribe(Storage.instance.getRecodingPath())
+                      .then((transcription) {
+                    ctx.read<TempData>().updateTranscription(transcription);
+                    ClientService.instance
+                        .chatBot(ctx)
+                        .then((answers) {
+                      _logger.d('ChatBot response - $answers');
+                      ctx.read<TempData>().updateAnswers(answers);
+                    });
+                  });
+                },
+                child: const Text('CHAT_BOT')),
           ],
         ),
       ),

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/screen/home.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => TempData())],
+        child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
