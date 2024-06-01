@@ -16,7 +16,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final AudioRecorder recorder;
-                                                                                        
+
   bool isRecording = false;
   bool recorderReady = false;
 
@@ -125,10 +125,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ElevatedButton(
-                onPressed: () => ClientService.instance.recognize(
-                    Storage.instance.getRecodingPath()
-                ),
-                child: const Text('SEND REMOTE'))
+                onPressed: () => ClientService.instance
+                    .transcribe(Storage.instance.getRecodingPath()),
+                child: const Text('TRANSCRIBE')),
+            ElevatedButton(
+                onPressed: () => ClientService.instance.chatBot(),
+                child: const Text('CHAT_BOT'))
           ],
         ),
       ),

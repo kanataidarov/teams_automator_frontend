@@ -146,11 +146,11 @@ class FileHeader extends $pb.GeneratedMessage {
 
 class TranscribeResponse extends $pb.GeneratedMessage {
   factory TranscribeResponse({
-    $core.String? message,
+    $core.String? transcription,
   }) {
     final $result = create();
-    if (message != null) {
-      $result.message = message;
+    if (transcription != null) {
+      $result.transcription = transcription;
     }
     return $result;
   }
@@ -159,7 +159,7 @@ class TranscribeResponse extends $pb.GeneratedMessage {
   factory TranscribeResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TranscribeResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'message')
+    ..aOS(1, _omitFieldNames ? '' : 'transcription')
     ..hasRequiredFields = false
   ;
 
@@ -185,26 +185,30 @@ class TranscribeResponse extends $pb.GeneratedMessage {
   static TranscribeResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get message => $_getSZ(0);
+  $core.String get transcription => $_getSZ(0);
   @$pb.TagNumber(1)
-  set message($core.String v) { $_setString(0, v); }
+  set transcription($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasMessage() => $_has(0);
+  $core.bool hasTranscription() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMessage() => clearField(1);
+  void clearTranscription() => clearField(1);
 }
 
 class ChatBotRequest extends $pb.GeneratedMessage {
   factory ChatBotRequest({
     $core.String? topic,
-    $core.Iterable<$core.String>? messages,
+    $core.String? model,
+    $core.Iterable<$core.String>? questions,
   }) {
     final $result = create();
     if (topic != null) {
       $result.topic = topic;
     }
-    if (messages != null) {
-      $result.messages.addAll(messages);
+    if (model != null) {
+      $result.model = model;
+    }
+    if (questions != null) {
+      $result.questions.addAll(questions);
     }
     return $result;
   }
@@ -214,7 +218,8 @@ class ChatBotRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ChatBotRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'topic')
-    ..pPS(2, _omitFieldNames ? '' : 'messages')
+    ..aOS(2, _omitFieldNames ? '' : 'model')
+    ..pPS(3, _omitFieldNames ? '' : 'questions')
     ..hasRequiredFields = false
   ;
 
@@ -249,16 +254,25 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   void clearTopic() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<$core.String> get messages => $_getList(1);
+  $core.String get model => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set model($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasModel() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearModel() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.String> get questions => $_getList(2);
 }
 
 class ChatBotResponse extends $pb.GeneratedMessage {
   factory ChatBotResponse({
-    $core.Iterable<$core.String>? messages,
+    $core.Iterable<$core.String>? answers,
   }) {
     final $result = create();
-    if (messages != null) {
-      $result.messages.addAll(messages);
+    if (answers != null) {
+      $result.answers.addAll(answers);
     }
     return $result;
   }
@@ -267,7 +281,7 @@ class ChatBotResponse extends $pb.GeneratedMessage {
   factory ChatBotResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ChatBotResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'messages')
+    ..pPS(1, _omitFieldNames ? '' : 'answers')
     ..hasRequiredFields = false
   ;
 
@@ -293,7 +307,7 @@ class ChatBotResponse extends $pb.GeneratedMessage {
   static ChatBotResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$core.String> get messages => $_getList(0);
+  $core.List<$core.String> get answers => $_getList(0);
 }
 
 

@@ -19,14 +19,15 @@ message FileHeader {
 }
 
 message TranscribeResponse {
-  string message = 1;
+  string transcription = 1;
 }
 
 message ChatBotRequest {
   string topic = 1;
-  repeated string messages = 2;
+  string model = 2;
+  repeated string questions = 3;
 }
 
 message ChatBotResponse {
-  repeated string messages = 1;
+  repeated string answers = 1;
 }

@@ -48,37 +48,39 @@ final $typed_data.Uint8List fileHeaderDescriptor = $convert.base64Decode(
 const TranscribeResponse$json = {
   '1': 'TranscribeResponse',
   '2': [
-    {'1': 'message', '3': 1, '4': 1, '5': 9, '10': 'message'},
+    {'1': 'transcription', '3': 1, '4': 1, '5': 9, '10': 'transcription'},
   ],
 };
 
 /// Descriptor for `TranscribeResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List transcribeResponseDescriptor = $convert.base64Decode(
-    'ChJUcmFuc2NyaWJlUmVzcG9uc2USGAoHbWVzc2FnZRgBIAEoCVIHbWVzc2FnZQ==');
+    'ChJUcmFuc2NyaWJlUmVzcG9uc2USJAoNdHJhbnNjcmlwdGlvbhgBIAEoCVINdHJhbnNjcmlwdG'
+    'lvbg==');
 
 @$core.Deprecated('Use chatBotRequestDescriptor instead')
 const ChatBotRequest$json = {
   '1': 'ChatBotRequest',
   '2': [
     {'1': 'topic', '3': 1, '4': 1, '5': 9, '10': 'topic'},
-    {'1': 'messages', '3': 2, '4': 3, '5': 9, '10': 'messages'},
+    {'1': 'model', '3': 2, '4': 1, '5': 9, '10': 'model'},
+    {'1': 'questions', '3': 3, '4': 3, '5': 9, '10': 'questions'},
   ],
 };
 
 /// Descriptor for `ChatBotRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List chatBotRequestDescriptor = $convert.base64Decode(
-    'Cg5DaGF0Qm90UmVxdWVzdBIUCgV0b3BpYxgBIAEoCVIFdG9waWMSGgoIbWVzc2FnZXMYAiADKA'
-    'lSCG1lc3NhZ2Vz');
+    'Cg5DaGF0Qm90UmVxdWVzdBIUCgV0b3BpYxgBIAEoCVIFdG9waWMSFAoFbW9kZWwYAiABKAlSBW'
+    '1vZGVsEhwKCXF1ZXN0aW9ucxgDIAMoCVIJcXVlc3Rpb25z');
 
 @$core.Deprecated('Use chatBotResponseDescriptor instead')
 const ChatBotResponse$json = {
   '1': 'ChatBotResponse',
   '2': [
-    {'1': 'messages', '3': 1, '4': 3, '5': 9, '10': 'messages'},
+    {'1': 'answers', '3': 1, '4': 3, '5': 9, '10': 'answers'},
   ],
 };
 
 /// Descriptor for `ChatBotResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List chatBotResponseDescriptor = $convert.base64Decode(
-    'Cg9DaGF0Qm90UmVzcG9uc2USGgoIbWVzc2FnZXMYASADKAlSCG1lc3NhZ2Vz');
+    'Cg9DaGF0Qm90UmVzcG9uc2USGAoHYW5zd2VycxgBIAMoCVIHYW5zd2Vycw==');
 
