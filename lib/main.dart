@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:interview_automator_frontend/home.dart';
+import 'package:interview_automator_frontend/screen/home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 

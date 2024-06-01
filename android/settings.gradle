@@ -1,4 +1,16 @@
 pluginManagement {
+    buildscript {
+        repositories {
+            mavenCentral()
+            maven {
+                url = uri("https://storage.googleapis.com/r8-releases/raw") // r8 maven
+            }
+        }
+        dependencies {
+            classpath("com.android.tools:r8:8.2.16-dev") // r8 version
+        }
+    }
+
     def flutterSdkPath = {
         def properties = new Properties()
         file("local.properties").withInputStream { properties.load(it) }
