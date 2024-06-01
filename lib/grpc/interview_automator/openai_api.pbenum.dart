@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: interview_automator/stt.proto
+//  source: interview_automator/openai_api.proto
 //
 // @dart = 2.12
 

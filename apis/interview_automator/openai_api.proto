@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package interview_automator;
+option go_package = "github.com/kanataidarov/interview_automator/pkg/interview_automator";
+
+service OpenAiApi {
+  rpc Transcribe(TranscribeRequest) returns (TranscribeResponse) {}
+  rpc ChatBot(ChatBotRequest) returns (ChatBotResponse) {}
+}
+
+message TranscribeRequest {
+  FileHeader header = 1;
+  bytes data = 2;
+}
+
+message FileHeader {
+  string name = 1;
+  optional int64 size = 2;
+}
+
+message TranscribeResponse {
+  string message = 1;
+}
+
+message ChatBotRequest {
+  string topic = 1;
+  repeated string messages = 2;
+}
+
+message ChatBotResponse {
+  repeated string messages = 1;
+}
