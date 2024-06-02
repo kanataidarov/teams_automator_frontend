@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/screen/home.dart';
+import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -24,7 +25,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (ctx) => const MyHomePage(),
+        '/settings': (ctx) => const SettingsPage()
+      },
     );
   }
 }

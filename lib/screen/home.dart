@@ -1,8 +1,9 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/storage.dart';
+import 'package:interview_automator_frontend/widget/drawer.dart';
+import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
@@ -91,56 +92,38 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         isRecording = true;
       });
-      await startRecording();
+      // await startRecording();
     } else {
-      await stopRecording();
+      // await stopRecording();
       setState(() {
         isRecording = false;
       });
     }
   }
 
+  void handleClient(BuildContext ctx) {
+    ClientService.instance
+        .transcribe(Storage.instance.getRecodingPath())
+        .then((transcription) {
+      ctx.read<TempData>().updateTranscription(transcription);
+      ClientService.instance.chatBot(ctx).then((answers) {
+        _logger.d('ChatBot response - $answers');
+        ctx.read<TempData>().updateAnswers(answers);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Interview Automator')),
+      drawer: const DrawerWidget(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            AvatarGlow(
-              animate: isRecording,
-              glowColor: Colors.red,
-              glowRadiusFactor: 0.1,
-              startDelay: const Duration(milliseconds: 1),
-              child: GestureDetector(
-                onLongPress: () async {
-                  record();
-                },
-                onLongPressUp: () async {
-                  record();
-                },
-                child: isRecording
-                    ? const Icon(Icons.radio_button_on,
-                        color: Colors.red, size: 230)
-                    : const Icon(Icons.panorama_fish_eye,
-                        color: Colors.black, size: 230),
-              ),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  ClientService.instance
-                      .transcribe(Storage.instance.getRecodingPath())
-                      .then((transcription) {
-                    ctx.read<TempData>().updateTranscription(transcription);
-                    ClientService.instance
-                        .chatBot(ctx)
-                        .then((answers) {
-                      _logger.d('ChatBot response - $answers');
-                      ctx.read<TempData>().updateAnswers(answers);
-                    });
-                  });
-                },
-                child: const Text('CHAT_BOT')),
+            RecordButton(isRecording: isRecording, recordFunc: record),
+            ElevatedButton(onPressed: () { handleClient(ctx); }, child: const Text('CHAT_BOT')),
           ],
         ),
       ),
