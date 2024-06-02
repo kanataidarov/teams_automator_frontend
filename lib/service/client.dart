@@ -64,9 +64,9 @@ class ClientService {
     var data = ctx.read<TempData>();
 
     ChatBotRequest request = ChatBotRequest(
-        topic: data.topic,
-        model: data.model,
-        questions: questions(data.transcription));
+        topic: data.getTopic(),
+        model: data.getModel(),
+        questions: questions(data.getTranscription()));
 
     List<String> answers = List.empty();
 

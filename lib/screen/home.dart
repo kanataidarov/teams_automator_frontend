@@ -105,10 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
     ClientService.instance
         .transcribe(Storage.instance.getRecodingPath())
         .then((transcription) {
-      ctx.read<TempData>().updateTranscription(transcription);
+      ctx.read<TempData>().setTranscription(transcription);
       ClientService.instance.chatBot(ctx).then((answers) {
         _logger.d('ChatBot response - $answers');
-        ctx.read<TempData>().updateAnswers(answers);
+        ctx.read<TempData>().setAnswers(answers);
       });
     });
   }
