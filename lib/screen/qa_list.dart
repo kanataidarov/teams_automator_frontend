@@ -1,7 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
+import 'package:interview_automator_frontend/widget/qa_modal.dart';
+import 'package:provider/provider.dart';
 
 class QaList extends StatefulWidget {
   const QaList({super.key});
@@ -55,14 +58,16 @@ class _QaListState extends State<QaList> {
       );
     }
 
-    List<Widget> generate() {
+    List<Widget> generate(BuildContext context) {
+      var data = context.read<TempData>();
+
       return List.generate(
           _items.length,
           (idx) => ReorderableDragStartListener(
-                index: idx,
-                key: Key('$idx'),
-                child: Card(
-                  child: ListTile(
+              index: idx,
+              key: Key('$idx'),
+              child: Card(
+                child: ListTile(
                     title: Text(_items[idx].title),
                     tileColor: idx.isOdd ? oddItemColor : evenItemColor,
                     leading: const Icon(Icons.drag_indicator),
@@ -74,15 +79,24 @@ class _QaListState extends State<QaList> {
                         });
                       },
                     ),
-                  ),
-                ),
-              ));
+                    onTap: () {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => QaModal(
+                              getSetting: data.getQuestion,
+                              idx: idx)).then((val) {
+                        if (null != val) {
+                          data.updateQuestion(idx, val);
+                        }
+                      });
+                    }),
+              )));
     }
 
     return ReorderableListView(
       padding: const EdgeInsets.symmetric(horizontal: 33),
       proxyDecorator: proxyDecorator,
-      children: generate(),
+      children: generate(context),
       onReorder: (int oldIndex, int newIndex) {
         setState(() {
           if (oldIndex < newIndex) {

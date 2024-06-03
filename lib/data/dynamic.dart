@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/storage/model/qa.dart';
 
 class TempData with ChangeNotifier {
   List<String> _answers = List.empty();
@@ -29,22 +30,10 @@ class TempData with ChangeNotifier {
     notifyListeners();
   }
 
-  final List<String> _questions = questions();
-  int questionsLen() => _questions.length;
+  final List<String> _questions = Qa.questions();
   String getQuestion(int i) => _questions[i];
   void updateQuestion(int i, String q) {
     _questions[i] = q;
     notifyListeners();
-  }
-
-  static List<String> questions() {
-    return [
-      """You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian.
- \nHere is text transcription of given interview part:
- \n{}
- \nExtract all questions asked by interviewer. """,
-      """Extract answer to questions just extracted by you from given transcription part. Generate JSON containing questions and answers.
- \nJSON structure should be following: { "interview_session": [ "question": "", "answer": "", ... ] } """
-    ];
   }
 }

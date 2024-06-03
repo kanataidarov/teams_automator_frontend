@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class TextItemModal extends StatefulWidget {
+class QaModal extends StatefulWidget {
   final Function getSetting;
   final int idx;
 
-  const TextItemModal({super.key, required this.getSetting, required this.idx});
+  const QaModal({super.key, required this.getSetting, required this.idx});
 
   @override
-  State<StatefulWidget> createState() => _TextItemModalState();
+  State<StatefulWidget> createState() => _QaModalState();
 }
 
-class _TextItemModalState extends State<TextItemModal> {
+class _QaModalState extends State<QaModal> {
   late TextEditingController tfControl;
 
   @override

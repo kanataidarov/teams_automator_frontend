@@ -1,8 +1,8 @@
+import 'model/qa.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'model/qa.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
