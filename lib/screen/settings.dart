@@ -17,7 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Center(child: Text('Settings'))),
+        appBar: AppBar(title: const Text('Settings')),
         drawer: const DrawerWidget(),
         body: SafeArea(
           child: settings(context),
@@ -27,18 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget settings(BuildContext ctx) {
     var data = ctx.read<TempData>();
 
-    var n = data.questionsLen();
-    var tiles = List<SettingsTile>.filled(
-        n,
-        SettingsTile(
-          title: const Text(''),
-        ));
-    for (var i = 0; i < n; i++) {
-      tiles[i] = textItemModal(ctx, data.getQuestion, data.updateQuestion, i);
-    }
-
     return SettingsList(sections: [
-      SettingsSection(title: const Text('Questions'), tiles: tiles),
       SettingsSection(title: const Text('ChatBot'), tiles: [
         textModal(ctx, data.getTopic, data.setTopic, 'Model'),
         textModal(ctx, data.getModel, data.setModel, 'Topic')

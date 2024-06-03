@@ -110,6 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void handleClient(BuildContext ctx) async {
+    
+
+    return;
+
     DbHelper.instance.initQa().then((val) async {
       db.query(Qa.tableName).then((val) {
         _logger.d('rows selected - ${val.length}');

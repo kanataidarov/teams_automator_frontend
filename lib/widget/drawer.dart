@@ -28,6 +28,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               title: const Text('Settings'),
               onTap: () {
                 navigate(ctx, '/settings');
+              }),
+          ListTile(
+              leading: const Icon(Icons.question_answer_outlined),
+              title: const Text('Q&A'),
+              onTap: () {
+                navigate(ctx, '/qa');
               })
         ],
       ),

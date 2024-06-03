@@ -2,7 +2,6 @@ import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
 import 'model/qa.dart';
 
 Logger _logger = Logger(level: Level.debug);
@@ -40,8 +39,9 @@ class DbHelper {
   Future<void> initQa() async {
     final db = await database;
     db.delete(Qa.tableName);
-    for (var question in Qa.questions()) {
-      final qa = Qa(question: question);
+    var qas = Qa.questions();
+    for (var i = 0; i < qas.length; i++) {
+      final qa = Qa(title: 'Question $i', ord: i, question: qas[i]);
       await insert(db, qa);
     }
   }

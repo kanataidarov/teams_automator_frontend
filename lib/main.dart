@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/screen/home.dart';
+import 'package:interview_automator_frontend/screen/qa_list.dart';
 import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (ctx) => const MyHomePage(),
-        '/settings': (ctx) => const SettingsPage()
+        '/settings': (ctx) => const SettingsPage(),
+        '/qa': (ctx) => const QaList()
       },
     );
   }
