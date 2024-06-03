@@ -3,14 +3,13 @@ import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/files.dart';
+import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../storage/model/qa.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -38,19 +37,20 @@ class _MyHomePageState extends State<MyHomePage> {
         recorderReady = val;
       });
     });
+    _logger.d('Recorder initialized');
 
     Files.instance.init();
-    DbHelper.instance.database.then((val) async {
+    DbHelper.instance.database.then((val) {
       db = val;
     });
 
     super.initState();
-    _logger.d('Recorder initialized');
   }
 
   @override
   void dispose() {
     recorder.dispose();
+    db.close();
     super.dispose();
   }
 
@@ -110,16 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void handleClient(BuildContext ctx) async {
-    
-
-    return;
-
-    DbHelper.instance.initQa().then((val) async {
+    QaProvider.instance.initQa().then((val) async {
       db.query(Qa.tableName).then((val) {
         _logger.d('rows selected - ${val.length}');
       });
     });
-
 
     return;
 
