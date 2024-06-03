@@ -1,11 +1,10 @@
-import '../data/dynamic.dart';
-import '../widget/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/data/dynamic.dart';
+import 'package:interview_automator_frontend/widget/drawer.dart';
+import 'package:interview_automator_frontend/widget/text_modal.dart';
 import 'package:interview_automator_frontend/widget/textitem_modal.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
-
-import '../widget/text_modal.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

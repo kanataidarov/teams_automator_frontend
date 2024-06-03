@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/service/client.dart';
-import 'package:interview_automator_frontend/storage/storage.dart';
+import 'package:interview_automator_frontend/storage/db.dart';
+import 'package:interview_automator_frontend/storage/files.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
+import 'package:sqflite/sqflite.dart';
+
+import '../storage/model/qa.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -18,6 +22,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late final Database db;
   late final AudioRecorder recorder;
 
   bool isRecording = false;
@@ -34,7 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    Storage().init();
+    Files.instance.init();
+    DbHelper.instance.database.then((val) async {
+      db = val;
+    });
 
     super.initState();
     _logger.d('Recorder initialized');
@@ -59,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> startRecording() async {
     if (!recorderReady) return;
 
-    String filePath = Storage.instance.getRecodingPath();
+    String filePath = Files.instance.getRecodingPath();
 
     try {
       await recorder.start(
@@ -101,9 +109,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void handleClient(BuildContext ctx) {
+  void handleClient(BuildContext ctx) async {
+    DbHelper.instance.initQa().then((val) async {
+      db.query(Qa.tableName).then((val) {
+        _logger.d('rows selected - ${val.length}');
+      });
+    });
+
+
+    return;
+
     ClientService.instance
-        .transcribe(Storage.instance.getRecodingPath())
+        .transcribe(Files.instance.getRecodingPath())
         .then((transcription) {
       ctx.read<TempData>().setTranscription(transcription);
       ClientService.instance.chatBot(ctx).then((answers) {
@@ -123,7 +140,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             RecordButton(isRecording: isRecording, recordFunc: record),
-            ElevatedButton(onPressed: () { handleClient(ctx); }, child: const Text('CHAT_BOT')),
+            ElevatedButton(
+                onPressed: () {
+                  handleClient(ctx);
+                },
+                child: const Text('CHAT_BOT')),
           ],
         ),
       ),
