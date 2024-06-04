@@ -21,7 +21,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final Database db;
+  late final Database _db;
   late final AudioRecorder recorder;
 
   bool isRecording = false;
@@ -40,8 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _logger.d('Recorder initialized');
 
     Files.instance.init();
-    DbHelper.instance.database.then((val) {
-      db = val;
+    DbHelper.instance.database.then((db) {
+      _db = db;
     });
 
     super.initState();
@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     recorder.dispose();
-    db.close();
+    DbHelper.instance.close();
     super.dispose();
   }
 
@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void handleClient(BuildContext ctx) async {
     QaProvider.instance.initQa().then((val) async {
-      db.query(Qa.tableName).then((val) {
+      _db.query(Qa.tableName).then((val) {
         _logger.d('rows selected - ${val.length}');
       });
     });

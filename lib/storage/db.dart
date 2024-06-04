@@ -27,4 +27,6 @@ class DbHelper {
     _logger.d('Database opened at ${db.path}');
     return db;
   }
+
+  Future close() async => _database!.close();
 }

@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:interview_automator_frontend/data/dynamic.dart';
+import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/qa_modal.dart';
-import 'package:provider/provider.dart';
+import 'package:logger/logger.dart' show Level, Logger;
+import 'package:sqflite/sqflite.dart';
+
+Logger _logger = Logger(level: Level.debug);
 
 class QaList extends StatefulWidget {
   const QaList({super.key});
@@ -14,13 +17,17 @@ class QaList extends StatefulWidget {
 }
 
 class _QaListState extends State<QaList> {
-  late final List<Qa> _items;
+  late Database _db;
+  List<Qa> _items = List.empty();
 
   @override
   void initState() {
-    final qas = Qa.questions();
-    _items = List<Qa>.generate(
-        qas.length, (int i) => Qa(title: 'Q&A $i', ord: i, question: qas[i]));
+    DbHelper.instance.database.then((db) async {
+      _db = db;
+      final List<Map<String, dynamic>> maps = await db.query(Qa.tableName);
+      _items = List.generate(maps.length, (i) => Qa.fromMap(maps[i]));
+    });
+
     super.initState();
   }
 
@@ -59,34 +66,32 @@ class _QaListState extends State<QaList> {
     }
 
     List<Widget> generate(BuildContext context) {
-      var data = context.read<TempData>();
-
       return List.generate(
           _items.length,
-          (idx) => ReorderableDragStartListener(
-              index: idx,
-              key: Key('$idx'),
+          (i) => ReorderableDragStartListener(
+              index: i,
+              key: Key('$i'),
               child: Card(
                 child: ListTile(
-                    title: Text(_items[idx].title),
-                    tileColor: idx.isOdd ? oddItemColor : evenItemColor,
+                    title: Text(_items[i].title!),
+                    tileColor: i.isOdd ? oddItemColor : evenItemColor,
                     leading: const Icon(Icons.drag_indicator),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete_outlined),
                       onPressed: () {
                         setState(() {
-                          _items.removeAt(idx);
+                          _items.removeAt(i);
                         });
                       },
                     ),
                     onTap: () {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => QaModal(
-                              getSetting: data.getQuestion,
-                              idx: idx)).then((val) {
-                        if (null != val) {
-                          data.updateQuestion(idx, val);
+                      showDialog<Qa>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  QaModal(qa: _items[i]))
+                          .then((qa) {
+                        if (null != qa) {
+                          _logger.d(qa);
                         }
                       });
                     }),

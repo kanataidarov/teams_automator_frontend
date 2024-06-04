@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:interview_automator_frontend/storage/model/qa.dart';
 
 class TempData with ChangeNotifier {
   List<String> _answers = List.empty();
@@ -27,13 +26,6 @@ class TempData with ChangeNotifier {
   String getTranscription() => _transcription;
   void setTranscription(final String t) {
     _transcription = t;
-    notifyListeners();
-  }
-
-  final List<String> _questions = Qa.questions();
-  String getQuestion(int i) => _questions[i];
-  void updateQuestion(int i, String q) {
-    _questions[i] = q;
     notifyListeners();
   }
 }

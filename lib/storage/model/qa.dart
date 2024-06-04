@@ -15,18 +15,18 @@ class Qa {
         qparam TEXT
       );''';
 
-  final int? id;
-  final String title;
-  final int ord;
-  final String question;
-  final String? answer;
-  final String? qparam;
+  int? id;
+  String? title;
+  int? ord;
+  String? question;
+  String? answer;
+  String? qparam;
 
   Qa(
       {this.id,
-      required this.title,
-      required this.ord,
-      required this.question,
+      this.title,
+      this.ord,
+      this.question,
       this.answer,
       this.qparam});
 
@@ -39,6 +39,15 @@ class Qa {
       'answer': answer,
       'qparam': qparam
     };
+  }
+
+  Qa.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    title = map['title'];
+    ord = map['ord'];
+    question = map['question'];
+    answer = map['answer'];
+    qparam = map['qparam'];
   }
 
   static List<String> questions() {
@@ -73,6 +82,8 @@ class QaProvider {
       final qa = Qa(title: 'QA $i', ord: i, question: qas[i]);
       await insert(qa);
     }
+
+    _logger.d('`${Qa.tableName}` table initialization completed');
   }
 
   Future<void> insert(Qa qa) async {
