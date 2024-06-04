@@ -41,7 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Files.instance.init();
     DbHelper.instance.database.then((db) {
-      _db = db;
+      setState(() {
+        _db = db;
+      });
     });
 
     super.initState();

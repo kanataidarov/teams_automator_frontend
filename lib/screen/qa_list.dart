@@ -4,7 +4,10 @@ import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/qa_modal.dart';
+import 'package:logger/logger.dart' show Level, Logger;
 import 'package:sqflite/sqflite.dart';
+
+Logger _logger = Logger(level: Level.debug);
 
 class QaList extends StatefulWidget {
   const QaList({super.key});
@@ -21,24 +24,30 @@ class _QaListState extends State<QaList> {
   void initState() {
     super.initState();
 
-    DbHelper.instance.database.then((db) async {
-      _db = db;
-      final List<Map<String, dynamic>> maps = await db.query(Qa.tableName);
-      _items = List.generate(maps.length, (i) => Qa.fromMap(maps[i]));
+    DbHelper.instance.database.then((db) {
+      setState(() {
+        _db = db;
+        db.query(Qa.tableName, orderBy: 'ord').then((maps) {
+          _items = List.generate(maps.length, (i) => Qa.fromMap(maps[i]));
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Questions & Answers')),
-        drawer: const DrawerWidget(),
-        body: SafeArea(
-          child: qaList(context),
-        ));
+      appBar: AppBar(title: const Text('Questions & Answers')),
+      drawer: const DrawerWidget(),
+      body: SafeArea(
+        child: _qaList(context),
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: _addQa, tooltip: 'New Q&A', child: const Icon(Icons.add)),
+    );
   }
 
-  Widget qaList(BuildContext context) {
+  Widget _qaList(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Color oddItemColor = colorScheme.secondary.withOpacity(0.05);
     final Color evenItemColor = colorScheme.secondary.withOpacity(0.15);
@@ -76,9 +85,12 @@ class _QaListState extends State<QaList> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete_outlined),
                       onPressed: () {
+                        final rec = _items[i];
+                        QaProvider.instance.delete(rec);
                         setState(() {
                           _items.removeAt(i);
                         });
+                        _logger.d('$rec deleted');
                       },
                     ),
                     onTap: () {
@@ -88,6 +100,8 @@ class _QaListState extends State<QaList> {
                               QaModal(qa: _items[i])).then((qa) {
                         if (null != qa) {
                           QaProvider.instance.update(qa);
+                          _logger.d('$qa updated');
+                          setState(() {});
                         }
                       });
                     }),
@@ -108,5 +122,23 @@ class _QaListState extends State<QaList> {
         });
       },
     );
+  }
+
+  void _addQa() {
+    showDialog<Qa>(
+        context: context,
+        builder: (BuildContext context) {
+          final emptyQa = Qa(question: '');
+          return QaModal(qa: emptyQa);
+        }).then((newQa) {
+      if (null != newQa) {
+        QaProvider.instance.insert(newQa).then((id) {
+          newQa.id = id;
+          setState(() {
+            _items.add(newQa);
+          });
+        });
+      }
+    });
   }
 }
