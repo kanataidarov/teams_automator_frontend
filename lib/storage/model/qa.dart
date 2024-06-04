@@ -22,13 +22,7 @@ class Qa {
   String? answer;
   String? qparam;
 
-  Qa(
-      {this.id,
-      this.title,
-      this.ord,
-      this.question,
-      this.answer,
-      this.qparam});
+  Qa({this.id, this.title, this.ord, this.question, this.answer, this.qparam});
 
   Map<String, dynamic> toMap() {
     return {
@@ -88,7 +82,15 @@ class QaProvider {
 
   Future<void> insert(Qa qa) async {
     final db = await _dbHelper.database;
-    await db.insert(Qa.tableName, qa.toMap(),
+    final id = await db.insert(Qa.tableName, qa.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+    _logger.d('Record with $id inserted to `${Qa.tableName}`');
+  }
+
+  Future<void> update(Qa qa) async {
+    final db = await _dbHelper.database;
+    final count = await db
+        .update(Qa.tableName, qa.toMap(), where: 'id = ?', whereArgs: [qa.id]);
+    _logger.d('$count records updated in `${Qa.tableName}`');
   }
 }

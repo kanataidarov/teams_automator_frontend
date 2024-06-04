@@ -4,10 +4,7 @@ import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/qa_modal.dart';
-import 'package:logger/logger.dart' show Level, Logger;
 import 'package:sqflite/sqflite.dart';
-
-Logger _logger = Logger(level: Level.debug);
 
 class QaList extends StatefulWidget {
   const QaList({super.key});
@@ -22,13 +19,13 @@ class _QaListState extends State<QaList> {
 
   @override
   void initState() {
+    super.initState();
+
     DbHelper.instance.database.then((db) async {
       _db = db;
       final List<Map<String, dynamic>> maps = await db.query(Qa.tableName);
       _items = List.generate(maps.length, (i) => Qa.fromMap(maps[i]));
     });
-
-    super.initState();
   }
 
   @override
@@ -86,12 +83,11 @@ class _QaListState extends State<QaList> {
                     ),
                     onTap: () {
                       showDialog<Qa>(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  QaModal(qa: _items[i]))
-                          .then((qa) {
+                          context: context,
+                          builder: (BuildContext context) =>
+                              QaModal(qa: _items[i])).then((qa) {
                         if (null != qa) {
-                          _logger.d(qa);
+                          QaProvider.instance.update(qa);
                         }
                       });
                     }),
