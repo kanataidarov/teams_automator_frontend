@@ -16,7 +16,7 @@ class ClientService {
   factory ClientService() => _instance;
   static ClientService get instance => _instance;
 
-  final String baseUrl = '192.168.8.10';
+  final String host = '192.168.8.10';
 
   late OpenAiApiClient _client;
 
@@ -30,7 +30,7 @@ class ClientService {
   }
 
   _createChannel() {
-    final channel = ClientChannel(baseUrl,
+    final channel = ClientChannel(host,
         port: 44045,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));

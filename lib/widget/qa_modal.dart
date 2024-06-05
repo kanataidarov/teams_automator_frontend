@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
-import 'package:logger/logger.dart' show Level, Logger;
-
-Logger _logger = Logger(level: Level.debug);
 
 class QaModal extends StatefulWidget {
   final Qa qa;

@@ -65,24 +65,6 @@ class QaProvider {
   QaProvider._privateConstructor();
   static final QaProvider instance = QaProvider._privateConstructor();
 
-  Future<void> initQa() async {
-    final db = await _dbHelper.database;
-
-    await db.execute('''DROP TABLE IF EXISTS ${Qa.tableName};''');
-    db.execute(Qa.createScript).then((_) {
-      _logger.d('Table ${Qa.tableName} created');
-    });
-
-    db.delete(Qa.tableName);
-    var qas = Qa.questions();
-    for (var i = 0; i < qas.length; i++) {
-      final qa = Qa(title: 'QA $i', ord: i, question: qas[i]);
-      await insert(qa);
-    }
-
-    _logger.d('`${Qa.tableName}` table initialization completed');
-  }
-
   Future<int> insert(Qa qa) async {
     final db = await _dbHelper.database;
     final id = await db.insert(Qa.tableName, qa.toMap(),

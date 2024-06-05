@@ -112,7 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void handleClient(BuildContext ctx) async {
-    QaProvider.instance.initQa().then((val) async {
+    DbHelper.instance
+        .recreateSchemaAndLoadData('assets/interview_automator_init.json')
+        .then((val) async {
       _db.query(Qa.tableName).then((val) {
         _logger.d('rows selected - ${val.length}');
       });

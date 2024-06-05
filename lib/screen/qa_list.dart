@@ -5,7 +5,6 @@ import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/qa_modal.dart';
 import 'package:logger/logger.dart' show Level, Logger;
-import 'package:sqflite/sqflite.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -17,7 +16,6 @@ class QaList extends StatefulWidget {
 }
 
 class _QaListState extends State<QaList> {
-  late Database _db;
   List<Qa> _items = List.empty();
 
   @override
@@ -26,7 +24,6 @@ class _QaListState extends State<QaList> {
 
     DbHelper.instance.database.then((db) {
       setState(() {
-        _db = db;
         db.query(Qa.tableName, orderBy: 'ord').then((maps) {
           _items = List.generate(maps.length, (i) => Qa.fromMap(maps[i]));
         });

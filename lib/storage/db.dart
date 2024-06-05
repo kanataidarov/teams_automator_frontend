@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +12,7 @@ Logger _logger = Logger(level: Level.debug);
 class DbHelper {
   static const _dbName = 'interview_automator.db';
   static const _dbVer = 3;
+  static const _defaultAssetsPath = 'assets/interview_automator_init.json';
 
   DbHelper._privateConstructor();
   static final DbHelper instance = DbHelper._privateConstructor();
@@ -29,4 +34,51 @@ class DbHelper {
   }
 
   Future close() async => _database!.close();
+
+  Future<Map<String, dynamic>> loadJson(String path) async {
+    String jsonStr = '';
+    try {
+      if (_defaultAssetsPath == path) {
+        jsonStr = await rootBundle.loadString(path);
+      } else {
+        File file = File(path);
+        jsonStr = await file.readAsString();
+      }
+    } catch (e) {
+      _logger.e('Error occurred loading settings file', error: e);
+    }
+    return await json.decode(jsonStr);
+  }
+
+  Future<void> recreateSchemaAndLoadData(String path) async {
+    final Map<String, dynamic> data;
+    try {
+      data = await loadJson(path);
+    } catch (e) {
+      _logger.e('Error decoding json', error: e);
+      return;
+    }
+
+    await _recreateTable(data["qa"]);
+  }
+
+  Future<void> _recreateTable(List<dynamic> recs) async {
+    final db = _database!;
+
+    await db.execute('''DROP TABLE IF EXISTS ${Qa.tableName};''');
+    db.execute(Qa.createScript).then((_) {
+      _logger.d('Table ${Qa.tableName} (re)created');
+    });
+
+    db.delete(Qa.tableName);
+
+    for (var qaJson in recs) {
+      final qa = Qa.fromMap(qaJson);
+      await QaProvider.instance.insert(qa);
+    }
+
+    _logger.d('`${Qa.tableName}` table initialization completed');
+  }
+
+
 }

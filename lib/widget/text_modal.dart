@@ -42,12 +42,12 @@ class _TextModalState extends State<TextModal> {
             onPressed: () {
               Navigator.pop(ctx);
             },
-            child: const Text('Cancel')),
+            child: const Text('Discard')),
         TextButton(
             onPressed: () {
               Navigator.pop(ctx, tfControl.text);
             },
-            child: const Text('OK'))
+            child: const Text('Save'))
       ],
     );
   }
