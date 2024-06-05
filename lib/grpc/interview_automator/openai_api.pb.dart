@@ -198,7 +198,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   factory ChatBotRequest({
     $core.String? topic,
     $core.String? model,
-    $core.Iterable<$core.String>? questions,
+    $core.Iterable<Question>? questions,
   }) {
     final $result = create();
     if (topic != null) {
@@ -219,7 +219,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ChatBotRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'topic')
     ..aOS(2, _omitFieldNames ? '' : 'model')
-    ..pPS(3, _omitFieldNames ? '' : 'questions')
+    ..pc<Question>(3, _omitFieldNames ? '' : 'questions', $pb.PbFieldType.PM, subBuilder: Question.create)
     ..hasRequiredFields = false
   ;
 
@@ -263,12 +263,76 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   void clearModel() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$core.String> get questions => $_getList(2);
+  $core.List<Question> get questions => $_getList(2);
+}
+
+class Question extends $pb.GeneratedMessage {
+  factory Question({
+    $core.int? qid,
+    $core.String? content,
+  }) {
+    final $result = create();
+    if (qid != null) {
+      $result.qid = qid;
+    }
+    if (content != null) {
+      $result.content = content;
+    }
+    return $result;
+  }
+  Question._() : super();
+  factory Question.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Question.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Question', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'qid', $pb.PbFieldType.O3)
+    ..aOS(2, _omitFieldNames ? '' : 'content')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Question clone() => Question()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Question copyWith(void Function(Question) updates) => super.copyWith((message) => updates(message as Question)) as Question;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Question create() => Question._();
+  Question createEmptyInstance() => create();
+  static $pb.PbList<Question> createRepeated() => $pb.PbList<Question>();
+  @$core.pragma('dart2js:noInline')
+  static Question getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Question>(create);
+  static Question? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get qid => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set qid($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasQid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearQid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get content => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set content($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasContent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearContent() => clearField(2);
 }
 
 class ChatBotResponse extends $pb.GeneratedMessage {
   factory ChatBotResponse({
-    $core.Iterable<$core.String>? answers,
+    $core.Iterable<Answer>? answers,
   }) {
     final $result = create();
     if (answers != null) {
@@ -281,7 +345,7 @@ class ChatBotResponse extends $pb.GeneratedMessage {
   factory ChatBotResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ChatBotResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
-    ..pPS(1, _omitFieldNames ? '' : 'answers')
+    ..pc<Answer>(1, _omitFieldNames ? '' : 'answers', $pb.PbFieldType.PM, subBuilder: Answer.create)
     ..hasRequiredFields = false
   ;
 
@@ -307,7 +371,71 @@ class ChatBotResponse extends $pb.GeneratedMessage {
   static ChatBotResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$core.String> get answers => $_getList(0);
+  $core.List<Answer> get answers => $_getList(0);
+}
+
+class Answer extends $pb.GeneratedMessage {
+  factory Answer({
+    $core.int? qid,
+    $core.String? content,
+  }) {
+    final $result = create();
+    if (qid != null) {
+      $result.qid = qid;
+    }
+    if (content != null) {
+      $result.content = content;
+    }
+    return $result;
+  }
+  Answer._() : super();
+  factory Answer.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Answer.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Answer', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'qid', $pb.PbFieldType.O3)
+    ..aOS(2, _omitFieldNames ? '' : 'content')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Answer clone() => Answer()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Answer copyWith(void Function(Answer) updates) => super.copyWith((message) => updates(message as Answer)) as Answer;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Answer create() => Answer._();
+  Answer createEmptyInstance() => create();
+  static $pb.PbList<Answer> createRepeated() => $pb.PbList<Answer>();
+  @$core.pragma('dart2js:noInline')
+  static Answer getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Answer>(create);
+  static Answer? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get qid => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set qid($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasQid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearQid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get content => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set content($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasContent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearContent() => clearField(2);
 }
 
 

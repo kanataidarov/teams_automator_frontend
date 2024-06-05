@@ -95,4 +95,10 @@ class SettingsProvider {
 
     _logger.d('`${Setting.tableName}` table initialization completed');
   }
+  
+  Future<Setting> byName(String name) async {
+    final db = await _dbHelper.database;
+    var res = await db.query(Setting.tableName, where: 'name = ?', whereArgs: [name]);
+    return Setting.fromMap(res[0]);
+  }
 }

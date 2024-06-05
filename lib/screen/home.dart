@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:interview_automator_frontend/data/dynamic.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/files.dart';
+import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:logger/logger.dart' show Level, Logger;
-import 'package:provider/provider.dart';
 import 'package:record/record.dart';
-import 'package:sqflite/sqflite.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -21,7 +19,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final Database _db;
   late final AudioRecorder recorder;
 
   bool isRecording = false;
@@ -29,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    ClientService().init();
+    ClientService.instance.init();
 
     recorder = AudioRecorder();
     openTheRecorder().then((val) {
@@ -40,11 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _logger.d('Recorder initialized');
 
     Files.instance.init();
-    DbHelper.instance.database.then((db) {
-      setState(() {
-        _db = db;
-      });
-    });
 
     super.initState();
   }
@@ -102,9 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         isRecording = true;
       });
-      // await startRecording();
+      await startRecording();
     } else {
-      // await stopRecording();
+      await stopRecording();
       setState(() {
         isRecording = false;
       });
@@ -112,23 +104,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void handleClient(BuildContext ctx) async {
-    DbHelper.instance
-        .recreateSchemaAndLoadData('assets/interview_automator_init.json')
-        .then((val) async {
-      _db.query(Qa.tableName).then((val) {
-        _logger.d('rows selected - ${val.length}');
-      });
-    });
-
-    return;
-
     ClientService.instance
         .transcribe(Files.instance.getRecodingPath())
         .then((transcription) {
-      ctx.read<TempData>().setTranscription(transcription);
-      ClientService.instance.chatBot(ctx).then((answers) {
-        _logger.d('ChatBot response - $answers');
-        ctx.read<TempData>().setAnswers(answers);
+      SettingsProvider.instance.byName('transcription').then((stng) async {
+        stng.value = transcription;
+        await SettingsProvider.instance.update(stng);
+      });
+
+      ClientService.instance.chatBot(ctx).then((answers) async {
+        for (var answer in answers) {
+          var qas = (await DbHelper.instance.database)
+              .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
+          var qa = Qa.fromMap((await qas).first);
+          qa.answer = answer.content;
+          await QaProvider.instance.update(qa);
+        }
       });
     });
   }

@@ -63,24 +63,52 @@ const ChatBotRequest$json = {
   '2': [
     {'1': 'topic', '3': 1, '4': 1, '5': 9, '10': 'topic'},
     {'1': 'model', '3': 2, '4': 1, '5': 9, '10': 'model'},
-    {'1': 'questions', '3': 3, '4': 3, '5': 9, '10': 'questions'},
+    {'1': 'questions', '3': 3, '4': 3, '5': 11, '6': '.interview_automator.Question', '10': 'questions'},
   ],
 };
 
 /// Descriptor for `ChatBotRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List chatBotRequestDescriptor = $convert.base64Decode(
     'Cg5DaGF0Qm90UmVxdWVzdBIUCgV0b3BpYxgBIAEoCVIFdG9waWMSFAoFbW9kZWwYAiABKAlSBW'
-    '1vZGVsEhwKCXF1ZXN0aW9ucxgDIAMoCVIJcXVlc3Rpb25z');
+    '1vZGVsEjsKCXF1ZXN0aW9ucxgDIAMoCzIdLmludGVydmlld19hdXRvbWF0b3IuUXVlc3Rpb25S'
+    'CXF1ZXN0aW9ucw==');
+
+@$core.Deprecated('Use questionDescriptor instead')
+const Question$json = {
+  '1': 'Question',
+  '2': [
+    {'1': 'qid', '3': 1, '4': 1, '5': 5, '10': 'qid'},
+    {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+  ],
+};
+
+/// Descriptor for `Question`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List questionDescriptor = $convert.base64Decode(
+    'CghRdWVzdGlvbhIQCgNxaWQYASABKAVSA3FpZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50');
 
 @$core.Deprecated('Use chatBotResponseDescriptor instead')
 const ChatBotResponse$json = {
   '1': 'ChatBotResponse',
   '2': [
-    {'1': 'answers', '3': 1, '4': 3, '5': 9, '10': 'answers'},
+    {'1': 'answers', '3': 1, '4': 3, '5': 11, '6': '.interview_automator.Answer', '10': 'answers'},
   ],
 };
 
 /// Descriptor for `ChatBotResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List chatBotResponseDescriptor = $convert.base64Decode(
-    'Cg9DaGF0Qm90UmVzcG9uc2USGAoHYW5zd2VycxgBIAMoCVIHYW5zd2Vycw==');
+    'Cg9DaGF0Qm90UmVzcG9uc2USNQoHYW5zd2VycxgBIAMoCzIbLmludGVydmlld19hdXRvbWF0b3'
+    'IuQW5zd2VyUgdhbnN3ZXJz');
+
+@$core.Deprecated('Use answerDescriptor instead')
+const Answer$json = {
+  '1': 'Answer',
+  '2': [
+    {'1': 'qid', '3': 1, '4': 1, '5': 5, '10': 'qid'},
+    {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+  ],
+};
+
+/// Descriptor for `Answer`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List answerDescriptor = $convert.base64Decode(
+    'CgZBbnN3ZXISEAoDcWlkGAEgASgFUgNxaWQSGAoHY29udGVudBgCIAEoCVIHY29udGVudA==');
 

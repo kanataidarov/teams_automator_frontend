@@ -25,9 +25,19 @@ message TranscribeResponse {
 message ChatBotRequest {
   string topic = 1;
   string model = 2;
-  repeated string questions = 3;
+  repeated Question questions = 3;
+}
+
+message Question {
+  int32 qid = 1;
+  string content = 2;
 }
 
 message ChatBotResponse {
-  repeated string answers = 1;
+  repeated Answer answers = 1;
+}
+
+message Answer {
+  int32 qid = 1;
+  string content = 2;
 }

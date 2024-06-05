@@ -3,20 +3,16 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:grpc/grpc.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbgrpc.dart';
+import 'package:interview_automator_frontend/storage/db.dart';
+import 'package:interview_automator_frontend/storage/model/settings.dart';
+import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:logger/logger.dart' show Level, Logger;
-import 'package:provider/provider.dart';
-
-import '../data/dynamic.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
 class ClientService {
-  ClientService._internal();
-  static final ClientService _instance = ClientService._internal();
-  factory ClientService() => _instance;
-  static ClientService get instance => _instance;
-
-  final String host = '192.168.8.10';
+  ClientService._privateConstructor();
+  static final ClientService instance = ClientService._privateConstructor();
 
   late OpenAiApiClient _client;
 
@@ -29,9 +25,11 @@ class ClientService {
     return _client;
   }
 
-  _createChannel() {
+  _createChannel() async {
+    final host = (await SettingsProvider.instance.byName('host')).value!;
+    final port = int.parse((await SettingsProvider.instance.byName('port')).value!);
     final channel = ClientChannel(host,
-        port: 44045,
+        port: port,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
     _client = OpenAiApiClient(channel);
@@ -60,15 +58,16 @@ class ClientService {
     return transcription;
   }
 
-  Future<List<String>> chatBot(BuildContext ctx) async {
-    var data = ctx.read<TempData>();
+  Future<List<Answer>> chatBot(BuildContext ctx) async {
+    final topic = (await SettingsProvider.instance.byName('topic')).value!;
+    final model = (await SettingsProvider.instance.byName('model')).value!;
+    final transcription =
+        (await SettingsProvider.instance.byName('transcription')).value!;
 
     ChatBotRequest request = ChatBotRequest(
-        topic: data.getTopic(),
-        model: data.getModel(),
-        questions: questions(data.getTranscription()));
+        topic: topic, model: model, questions: await _questions(transcription));
 
-    List<String> answers = List.empty();
+    List<Answer> answers = List.empty();
 
     try {
       var response = await _client.chatBot(request);
@@ -83,16 +82,15 @@ class ClientService {
     return answers;
   }
 
-  questions(String transcription) {
-    _logger.d('Transcription - $transcription');
+  Future<List<Question>> _questions(String transcription) async {
+    var qas = (await DbHelper.instance.database).query(Qa.tableName);
 
-    return [
-      """You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian.
- \nHere is text transcription of given interview part:
- \n$transcription
- \nExtract all questions asked by interviewer. """,
-      """Extract answer to questions just extracted by you from given transcription part. Generate JSON containing questions and answers.
- \nJSON structure should be following: { "interview_session": [ "question": "", "answer": "", ... ] } """
-    ];
+    List<Question> questions = List.empty(growable: true);
+    for (var qaMap in await qas) {
+      var qa = Qa.fromMap(qaMap);
+      questions.add(Question(qid: qa.id, content: qa.question));
+    }
+
+    return questions;
   }
 }

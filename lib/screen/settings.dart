@@ -4,10 +4,7 @@ import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/reinit_modal.dart';
 import 'package:interview_automator_frontend/widget/setting_modal.dart';
-import 'package:logger/logger.dart' show Level, Logger;
 import 'package:settings_ui/settings_ui.dart';
-
-Logger _logger = Logger(level: Level.debug);
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
