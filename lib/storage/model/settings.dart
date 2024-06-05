@@ -4,13 +4,14 @@ import 'package:sqflite/sqflite.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
-class Settings {
+class Setting {
   static const tableName = 'settings';
   static const createScript = '''CREATE TABLE $tableName (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         value TEXT NOT NULL,
         title TEXT NOT NULL,
+        section TEXT NOT NULL,
         description TEXT
       );''';
 
@@ -18,31 +19,34 @@ class Settings {
   String? name;
   String? value;
   String? title;
+  String? section;
   String? description;
 
-  Settings({this.id, this.name, this.value, this.title, this.description});
+  Setting({this.id, this.name, this.value, this.title, this.description});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': title,
+      'name': name,
       'value': value,
       'title': title,
+      'section': section,
       'description': description
     };
   }
 
-  Settings.fromMap(Map<String, dynamic> map) {
+  Setting.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     name = map['name'];
     value = map['value'];
     title = map['title'];
+    section = map['section'];
     description = map['description'];
   }
 
   @override
   String toString() =>
-      '${Settings.tableName}(Id=$id,name=`$name`,title=`$title`)';
+      '${Setting.tableName}(Id=$id,name=`$name`,title=`$title`)';
 }
 
 class SettingsProvider {
@@ -52,43 +56,43 @@ class SettingsProvider {
   static final SettingsProvider instance =
       SettingsProvider._privateConstructor();
 
-  Future<int> insert(Settings s) async {
+  Future<int> insert(Setting s) async {
     final db = await _dbHelper.database;
-    final id = await db.insert(Settings.tableName, s.toMap(),
+    final id = await db.insert(Setting.tableName, s.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     s.id = id;
     _logger.d('Record $s inserted');
     return id;
   }
 
-  Future<void> update(Settings s) async {
+  Future<void> update(Setting s) async {
     final db = await _dbHelper.database;
-    final count = await db.update(Settings.tableName, s.toMap(),
+    final count = await db.update(Setting.tableName, s.toMap(),
         where: 'id = ?', whereArgs: [s.id]);
-    _logger.d('$count records updated in `${Settings.tableName}`');
+    _logger.d('$count records updated in `${Setting.tableName}`');
   }
 
-  Future<void> delete(Settings s) async {
+  Future<void> delete(Setting s) async {
     final db = await _dbHelper.database;
     final count =
-        await db.delete(Settings.tableName, where: 'id = ?', whereArgs: [s.id]);
-    _logger.d('$count records deleted in `${Settings.tableName}`');
+        await db.delete(Setting.tableName, where: 'id = ?', whereArgs: [s.id]);
+    _logger.d('$count records deleted in `${Setting.tableName}`');
   }
 
   Future<void> recreateTable(List<dynamic> recs) async {
     final db = await _dbHelper.database;
-    await db.execute('''DROP TABLE IF EXISTS ${Settings.tableName};''');
-    db.execute(Settings.createScript).then((_) {
-      _logger.d('Table ${Settings.tableName} (re)created');
+    await db.execute('''DROP TABLE IF EXISTS ${Setting.tableName};''');
+    db.execute(Setting.createScript).then((_) {
+      _logger.d('Table ${Setting.tableName} (re)created');
     });
 
-    db.delete(Settings.tableName);
+    db.delete(Setting.tableName);
 
     for (var stngJson in recs) {
-      final stng = Settings.fromMap(stngJson);
+      final stng = Setting.fromMap(stngJson);
       await insert(stng);
     }
 
-    _logger.d('`${Settings.tableName}` table initialization completed');
+    _logger.d('`${Setting.tableName}` table initialization completed');
   }
 }

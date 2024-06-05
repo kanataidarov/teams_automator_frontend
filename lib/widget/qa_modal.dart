@@ -55,7 +55,7 @@ class _QaModalState extends State<QaModal> {
       return currentOrd;
     }
 
-    normal(int currentOrd) => <Widget>[
+    normal() => <Widget>[
           Expanded(
             child: TextField(
               controller: _questionControl,
@@ -104,7 +104,7 @@ class _QaModalState extends State<QaModal> {
           builder: (BuildContext ctx, AsyncSnapshot<int> snapshot) {
             List<Widget> children;
             if (snapshot.hasData) {
-              children = normal(snapshot.data!);
+              children = normal();
             } else if (snapshot.hasError) {
               children = error(snapshot);
             } else {

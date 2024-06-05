@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/storage/model/settings.dart';
 
-class TextModal extends StatefulWidget {
-  final Function getSetting;
-  final String settingName;
+class SettingModal extends StatefulWidget {
+  final Setting setting;
 
-  const TextModal(
-      {super.key, required this.getSetting, required this.settingName});
+  const SettingModal({super.key, required this.setting});
 
   @override
-  State<StatefulWidget> createState() => _TextModalState();
+  State<StatefulWidget> createState() => _SettingModalState();
 }
 
-class _TextModalState extends State<TextModal> {
+class _SettingModalState extends State<SettingModal> {
   late TextEditingController tfControl;
 
   @override
@@ -28,10 +27,10 @@ class _TextModalState extends State<TextModal> {
 
   @override
   Widget build(BuildContext ctx) {
-    tfControl.text = widget.getSetting();
+    tfControl.text = widget.setting.value!;
 
     return AlertDialog(
-      title: Text('Question ${widget.settingName}'),
+      title: Text(widget.setting.title!),
       content: TextField(
           controller: tfControl,
           keyboardType: TextInputType.multiline,
