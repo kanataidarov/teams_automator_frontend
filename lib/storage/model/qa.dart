@@ -15,17 +15,6 @@ class Qa {
         qparam TEXT
       );''';
 
-  static List<String> questions() {
-    return [
-      """You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian.      
-\nHere is text transcription of given interview part:                                                                                             
-\n{}                                                                                                                                              
-\nExtract all questions asked by interviewer. """,
-      """Extract answer to questions just extracted by you from given transcription part. Generate JSON containing questions and answers.          
-\nJSON structure should be following: { "interview_session": [ "question": "", "answer": "", ... ] } """
-    ];
-  }
-
   int? id;
   String? title;
   int? ord;
@@ -86,5 +75,22 @@ class QaProvider {
     final count =
         await db.delete(Qa.tableName, where: 'id = ?', whereArgs: [qa.id]);
     _logger.d('$count records deleted in `${Qa.tableName}`');
+  }
+
+  Future<void> recreateTable(List<dynamic> recs) async {
+    final db = await _dbHelper.database;
+    await db.execute('''DROP TABLE IF EXISTS ${Qa.tableName};''');
+    db.execute(Qa.createScript).then((_) {
+      _logger.d('Table ${Qa.tableName} (re)created');
+    });
+
+    db.delete(Qa.tableName);
+
+    for (var qaJson in recs) {
+      final qa = Qa.fromMap(qaJson);
+      await insert(qa);
+    }
+
+    _logger.d('`${Qa.tableName}` table initialization completed');
   }
 }
