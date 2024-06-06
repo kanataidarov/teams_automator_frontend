@@ -63,4 +63,12 @@ class DbHelper {
     await SettingsProvider.instance.recreateTable(data["settings"]);
     await QaProvider.instance.recreateTable(data["qa"]);
   }
+
+  Future<void> checkIfInit() async {
+    var tables = (await database).query('sqlite_master',
+        where: 'name = ?', whereArgs: [Setting.tableName]);
+    if ((await tables).isEmpty) {
+      recreateSchemaAndLoadData('assets/interview_automator_init.json');
+    }
+  }
 }

@@ -46,7 +46,7 @@ class Setting {
 
   @override
   String toString() =>
-      '${Setting.tableName}(Id=$id,name=`$name`,title=`$title`)';
+      '${Setting.tableName}(Id=$id,name=`$name`,title=`$title`,section=`$section`)';
 }
 
 class SettingsProvider {
@@ -95,10 +95,11 @@ class SettingsProvider {
 
     _logger.d('`${Setting.tableName}` table initialization completed');
   }
-  
+
   Future<Setting> byName(String name) async {
     final db = await _dbHelper.database;
-    var res = await db.query(Setting.tableName, where: 'name = ?', whereArgs: [name]);
+    var res =
+        await db.query(Setting.tableName, where: 'name = ?', whereArgs: [name]);
     return Setting.fromMap(res[0]);
   }
 }

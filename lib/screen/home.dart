@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/service/client.dart';
+import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/files.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
@@ -26,8 +27,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    ClientService.instance.init();
-
     recorder = AudioRecorder();
     openTheRecorder().then((val) {
       setState(() {
@@ -35,8 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
     _logger.d('Recorder initialized');
-
-    Files.instance.init();
 
     super.initState();
   }
@@ -124,24 +121,34 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  normal(BuildContext ctx, bool isDebug) => !isDebug
+      ? Container()
+      : FloatingActionButton(
+          onPressed: () => handleClient(ctx),
+          tooltip: 'Debug',
+          child: const Icon(Icons.telegram_outlined));
+
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Interview Automator')),
-      drawer: const DrawerWidget(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RecordButton(isRecording: isRecording, recordFunc: record),
-            ElevatedButton(
-                onPressed: () {
-                  handleClient(ctx);
-                },
-                child: const Text('CHAT_BOT')),
-          ],
+        appBar: AppBar(title: const Text('Interview Automator')),
+        drawer: const DrawerWidget(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RecordButton(isRecording: isRecording, recordFunc: record)
+            ],
+          ),
         ),
-      ),
-    );
+        floatingActionButton: FutureBuilder<bool>(
+            future: isDebugEnabled(),
+            builder: (BuildContext ctx, AsyncSnapshot<bool> snapshot) {
+              Widget cont = Container();
+              if (snapshot.hasData) {
+                cont = normal(ctx, snapshot.data!);
+              }
+              return cont;
+            }));
   }
 }

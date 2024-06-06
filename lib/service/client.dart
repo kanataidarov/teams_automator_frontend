@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:grpc/grpc.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbgrpc.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
-import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
+import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 
 Logger _logger = Logger(level: Level.debug);
@@ -14,25 +14,23 @@ class ClientService {
   ClientService._privateConstructor();
   static final ClientService instance = ClientService._privateConstructor();
 
-  late OpenAiApiClient _client;
-
-  Future<void> init() async {
-    _createChannel();
-    _logger.d('Remote service Client initialized');
+  static OpenAiApiClient? _client;
+  Future<OpenAiApiClient> get client async {
+    if (_client != null) return _client!;
+    _client = await _initGrpcClient();
+    return _client!;
   }
 
-  OpenAiApiClient get getClient {
-    return _client;
-  }
-
-  _createChannel() async {
+  _initGrpcClient() async {
     final host = (await SettingsProvider.instance.byName('host')).value!;
-    final port = int.parse((await SettingsProvider.instance.byName('port')).value!);
+    final port =
+        int.parse((await SettingsProvider.instance.byName('port')).value!);
     final channel = ClientChannel(host,
         port: port,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
     _client = OpenAiApiClient(channel);
+    _logger.d('Remote service Client initialized');
   }
 
   Future<String> transcribe(final filePath) async {
@@ -47,7 +45,7 @@ class ClientService {
 
     _logger.d('Sending request - ${request.header}');
     try {
-      transcription = (await _client.transcribe(request)).transcription;
+      transcription = (await (await client).transcribe(request)).transcription;
       _logger.i('Response - $transcription');
     } on GrpcError catch (e) {
       _logger.e('Error sending TranscribeRequest - ${e.message}', error: e);
@@ -70,8 +68,7 @@ class ClientService {
     List<Answer> answers = List.empty();
 
     try {
-      var response = await _client.chatBot(request);
-      answers = response.answers;
+      answers = (await (await client).chatBot(request)).answers;
     } on GrpcError catch (e) {
       _logger.e('Error sending ChatBotRequest - ${e.message}', error: e);
     } catch (e) {

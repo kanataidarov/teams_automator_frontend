@@ -4,7 +4,10 @@ import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/reinit_modal.dart';
 import 'package:interview_automator_frontend/widget/setting_modal.dart';
+import 'package:logger/logger.dart' show Level, Logger;
 import 'package:settings_ui/settings_ui.dart';
+
+Logger _logger = Logger(level: Level.debug);
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -81,11 +84,18 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<List<Setting>> _fetchSettings() async {
-    var recs = (await DbHelper.instance.database).query('settings');
+    final recs = (await DbHelper.instance.database).query('settings');
+
+    bool debugEnabled = await isDebugEnabled();
 
     final List<Setting> stngs = List.empty(growable: true);
     for (var stngRec in await recs) {
       var stng = Setting.fromMap(stngRec);
+
+      if (!debugEnabled && 'hidden' == stng.section) {
+        continue;
+      }
+
       stngs.add(stng);
     }
 
@@ -110,4 +120,9 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     return sections;
   }
+}
+
+Future<bool> isDebugEnabled() async {
+  var stng = (await SettingsProvider.instance.byName('debug_enabled')).value!;
+  return bool.parse(stng, caseSensitive: false);
 }
