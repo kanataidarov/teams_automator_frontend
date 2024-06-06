@@ -12,6 +12,7 @@ class Setting {
         value TEXT NOT NULL,
         title TEXT NOT NULL,
         section TEXT NOT NULL,
+        type TEXT NOT NULL,
         description TEXT
       );''';
 
@@ -20,9 +21,17 @@ class Setting {
   String? value;
   String? title;
   String? section;
+  String? type;
   String? description;
 
-  Setting({this.id, this.name, this.value, this.title, this.description});
+  Setting(
+      {this.id,
+      this.name,
+      this.value,
+      this.title,
+      this.section,
+      this.type,
+      this.description});
 
   Map<String, dynamic> toMap() {
     return {
@@ -31,6 +40,7 @@ class Setting {
       'value': value,
       'title': title,
       'section': section,
+      'type': type,
       'description': description
     };
   }
@@ -41,12 +51,13 @@ class Setting {
     value = map['value'];
     title = map['title'];
     section = map['section'];
+    type = map['type'];
     description = map['description'];
   }
 
   @override
   String toString() =>
-      '${Setting.tableName}(Id=$id,name=`$name`,title=`$title`,section=`$section`)';
+      '${Setting.tableName}(Id=$id,name=`$name`,title=`$title`,section=`$section`,type=`$type`)';
 }
 
 class SettingsProvider {

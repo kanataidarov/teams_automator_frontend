@@ -17,10 +17,10 @@ class RecordButton extends StatelessWidget {
       startDelay: const Duration(milliseconds: 1),
       child: GestureDetector(
         onLongPress: () async {
-          recordFunc();
+          recordFunc(context);
         },
         onLongPressUp: () async {
-          recordFunc();
+          recordFunc(context);
         },
         child: isRecording
             ? const Icon(Icons.radio_button_on, color: Colors.red, size: 230)

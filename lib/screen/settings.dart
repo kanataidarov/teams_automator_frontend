@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
+import 'package:interview_automator_frontend/widget/default_setting_modal.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/reinit_modal.dart';
 import 'package:interview_automator_frontend/widget/setting_modal.dart';
-import 'package:logger/logger.dart' show Level, Logger;
 import 'package:settings_ui/settings_ui.dart';
-
-Logger _logger = Logger(level: Level.debug);
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -70,17 +68,31 @@ class _SettingsPageState extends State<SettingsPage> {
         onPressed: (BuildContext context) {
           showDialog<String>(
               context: context,
-              builder: (BuildContext context) {
-                return 'init_file_path' != setting.name
-                    ? SettingModal(setting: setting)
-                    : ReinitModal(path: setting.value!);
-              }).then((newVal) {
+              builder: (_) => _buildModalInt(setting)).then((newVal) {
             if (newVal != null) {
               setting.value = newVal;
               SettingsProvider.instance.update(setting);
             }
           });
         });
+  }
+
+  Widget _buildModalInt(Setting setting) {
+    if ('init_file_path' == setting.name) {
+      return ReinitModal(path: setting.value!);
+    }
+    switch (setting.type) {
+      case 'text':
+        return SettingModal(setting: setting);
+      case 'integer':
+        return SettingModal(setting: setting);
+      case 'bool':
+        return SettingModal(setting: setting);
+      case 'default_text':
+        return DefaultSettingModal(setting: setting);
+      default:
+        return SettingModal(setting: setting);
+    }
   }
 
   Future<List<Setting>> _fetchSettings() async {
