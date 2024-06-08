@@ -113,22 +113,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void handleClient(BuildContext context) async {
-    ClientService.instance
-        .transcribe(await _getRecordingPath())
-        .then((transcription) {
-      SettingsProvider.instance.byName('transcription').then((stng) async {
-        stng.value = transcription;
-        await SettingsProvider.instance.update(stng);
-      });
+    // TODO solve callback hell
+    _getRecordingPath().then((path) {
+      ClientService.instance
+          .transcribe(path)
+          .then((transcription) {
+        SettingsProvider.instance.byName('transcription').then((stng) async {
+          stng.value = transcription;
+          await SettingsProvider.instance.update(stng);
+        });
 
-      ClientService.instance.chatBot(context).then((answers) async {
-        for (var answer in answers) {
-          var qas = (await DbHelper.instance.database)
-              .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
-          var qa = Qa.fromMap((await qas).first);
-          qa.answer = answer.content;
-          await QaProvider.instance.update(qa);
-        }
+        ClientService.instance.chatBot(context).then((answers) async {
+          for (var answer in answers) {
+            var qas = (await DbHelper.instance.database)
+                .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
+            var qa = Qa.fromMap((await qas).first);
+            qa.answer = answer.content;
+            await QaProvider.instance.update(qa);
+          }
+        });
       });
     });
   }

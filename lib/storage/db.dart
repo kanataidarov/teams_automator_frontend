@@ -25,7 +25,7 @@ class DbHelper {
     return _database!;
   }
 
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
     var path = join((await getApplicationDocumentsDirectory()).path, _dbName);
 
     var db = await openDatabase(path, version: _dbVer);

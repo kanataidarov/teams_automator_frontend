@@ -17,11 +17,12 @@ class ClientService {
   static OpenAiApiClient? _client;
   Future<OpenAiApiClient> get client async {
     if (_client != null) return _client!;
-    _client = await _initGrpcClient();
+    _client = await initGrpcClient();
+    _logger.d('Remote service Client initialized');
     return _client!;
   }
 
-  _initGrpcClient() async {
+  Future<OpenAiApiClient> initGrpcClient() async {
     final host = (await SettingsProvider.instance.byName('host')).value!;
     final port =
         int.parse((await SettingsProvider.instance.byName('port')).value!);
@@ -29,8 +30,7 @@ class ClientService {
         port: port,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
-    _client = OpenAiApiClient(channel);
-    _logger.d('Remote service Client initialized');
+    return OpenAiApiClient(channel);
   }
 
   Future<String> transcribe(final filePath) async {
@@ -45,7 +45,8 @@ class ClientService {
 
     _logger.d('Sending request - ${request.header}');
     try {
-      transcription = (await (await client).transcribe(request)).transcription;
+      var cli = await client;
+      transcription = (await cli.transcribe(request)).transcription;
       _logger.i('Response - $transcription');
     } on GrpcError catch (e) {
       _logger.e('Error sending TranscribeRequest - ${e.message}', error: e);
@@ -68,7 +69,8 @@ class ClientService {
     List<Answer> answers = List.empty();
 
     try {
-      answers = (await (await client).chatBot(request)).answers;
+      var cli = await client;
+      answers = (await cli.chatBot(request)).answers;
     } on GrpcError catch (e) {
       _logger.e('Error sending ChatBotRequest - ${e.message}', error: e);
     } catch (e) {
