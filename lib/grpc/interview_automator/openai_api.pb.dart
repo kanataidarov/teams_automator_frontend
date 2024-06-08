@@ -18,6 +18,7 @@ class TranscribeRequest extends $pb.GeneratedMessage {
   factory TranscribeRequest({
     FileHeader? header,
     $core.List<$core.int>? data,
+    $core.bool? isDebug,
   }) {
     final $result = create();
     if (header != null) {
@@ -25,6 +26,9 @@ class TranscribeRequest extends $pb.GeneratedMessage {
     }
     if (data != null) {
       $result.data = data;
+    }
+    if (isDebug != null) {
+      $result.isDebug = isDebug;
     }
     return $result;
   }
@@ -35,6 +39,7 @@ class TranscribeRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TranscribeRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..aOM<FileHeader>(1, _omitFieldNames ? '' : 'header', subBuilder: FileHeader.create)
     ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'data', $pb.PbFieldType.OY)
+    ..aOB(3, _omitFieldNames ? '' : 'isDebug')
     ..hasRequiredFields = false
   ;
 
@@ -78,6 +83,15 @@ class TranscribeRequest extends $pb.GeneratedMessage {
   $core.bool hasData() => $_has(1);
   @$pb.TagNumber(2)
   void clearData() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get isDebug => $_getBF(2);
+  @$pb.TagNumber(3)
+  set isDebug($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasIsDebug() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIsDebug() => clearField(3);
 }
 
 class FileHeader extends $pb.GeneratedMessage {
@@ -199,6 +213,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     $core.String? topic,
     $core.String? model,
     $core.Iterable<Question>? questions,
+    $core.bool? isDebug,
   }) {
     final $result = create();
     if (topic != null) {
@@ -210,6 +225,9 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     if (questions != null) {
       $result.questions.addAll(questions);
     }
+    if (isDebug != null) {
+      $result.isDebug = isDebug;
+    }
     return $result;
   }
   ChatBotRequest._() : super();
@@ -220,6 +238,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'topic')
     ..aOS(2, _omitFieldNames ? '' : 'model')
     ..pc<Question>(3, _omitFieldNames ? '' : 'questions', $pb.PbFieldType.PM, subBuilder: Question.create)
+    ..aOB(4, _omitFieldNames ? '' : 'isDebug')
     ..hasRequiredFields = false
   ;
 
@@ -264,6 +283,15 @@ class ChatBotRequest extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(3)
   $core.List<Question> get questions => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $core.bool get isDebug => $_getBF(3);
+  @$pb.TagNumber(4)
+  set isDebug($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasIsDebug() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearIsDebug() => clearField(4);
 }
 
 class Question extends $pb.GeneratedMessage {

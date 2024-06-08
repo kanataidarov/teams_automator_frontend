@@ -11,6 +11,7 @@ service OpenAiApi {
 message TranscribeRequest {
   FileHeader header = 1;
   bytes data = 2;
+  bool is_debug = 3;
 }
 
 message FileHeader {
@@ -26,6 +27,7 @@ message ChatBotRequest {
   string topic = 1;
   string model = 2;
   repeated Question questions = 3;
+  bool is_debug = 4;
 }
 
 message Question {

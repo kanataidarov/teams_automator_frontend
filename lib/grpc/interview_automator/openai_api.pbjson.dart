@@ -19,13 +19,15 @@ const TranscribeRequest$json = {
   '2': [
     {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.interview_automator.FileHeader', '10': 'header'},
     {'1': 'data', '3': 2, '4': 1, '5': 12, '10': 'data'},
+    {'1': 'is_debug', '3': 3, '4': 1, '5': 8, '10': 'isDebug'},
   ],
 };
 
 /// Descriptor for `TranscribeRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List transcribeRequestDescriptor = $convert.base64Decode(
     'ChFUcmFuc2NyaWJlUmVxdWVzdBI3CgZoZWFkZXIYASABKAsyHy5pbnRlcnZpZXdfYXV0b21hdG'
-    '9yLkZpbGVIZWFkZXJSBmhlYWRlchISCgRkYXRhGAIgASgMUgRkYXRh');
+    '9yLkZpbGVIZWFkZXJSBmhlYWRlchISCgRkYXRhGAIgASgMUgRkYXRhEhkKCGlzX2RlYnVnGAMg'
+    'ASgIUgdpc0RlYnVn');
 
 @$core.Deprecated('Use fileHeaderDescriptor instead')
 const FileHeader$json = {
@@ -64,6 +66,7 @@ const ChatBotRequest$json = {
     {'1': 'topic', '3': 1, '4': 1, '5': 9, '10': 'topic'},
     {'1': 'model', '3': 2, '4': 1, '5': 9, '10': 'model'},
     {'1': 'questions', '3': 3, '4': 3, '5': 11, '6': '.interview_automator.Question', '10': 'questions'},
+    {'1': 'is_debug', '3': 4, '4': 1, '5': 8, '10': 'isDebug'},
   ],
 };
 
@@ -71,7 +74,7 @@ const ChatBotRequest$json = {
 final $typed_data.Uint8List chatBotRequestDescriptor = $convert.base64Decode(
     'Cg5DaGF0Qm90UmVxdWVzdBIUCgV0b3BpYxgBIAEoCVIFdG9waWMSFAoFbW9kZWwYAiABKAlSBW'
     '1vZGVsEjsKCXF1ZXN0aW9ucxgDIAMoCzIdLmludGVydmlld19hdXRvbWF0b3IuUXVlc3Rpb25S'
-    'CXF1ZXN0aW9ucw==');
+    'CXF1ZXN0aW9ucxIZCghpc19kZWJ1ZxgEIAEoCFIHaXNEZWJ1Zw==');
 
 @$core.Deprecated('Use questionDescriptor instead')
 const Question$json = {

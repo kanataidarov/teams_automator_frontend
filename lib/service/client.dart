@@ -37,12 +37,15 @@ class ClientService {
   Future<String> transcribe(final filePath) async {
     String transcription = '';
 
+    final debugEnabled = bool.parse(
+        (await SettingsProvider.instance.byName('debug_enabled')).value!);
+
     var file = File(filePath);
 
     FileHeader header =
         FileHeader(name: filePath, size: Int64(file.lengthSync()));
-    TranscribeRequest request =
-        TranscribeRequest(header: header, data: file.readAsBytesSync());
+    TranscribeRequest request = TranscribeRequest(
+        header: header, data: file.readAsBytesSync(), isDebug: debugEnabled);
 
     _logger.d('Sending request - ${request.header}');
     try {
@@ -63,9 +66,14 @@ class ClientService {
     final model = (await SettingsProvider.instance.byName('model')).value!;
     final transcription =
         (await SettingsProvider.instance.byName('transcription')).value!;
+    final debugEnabled = bool.parse(
+        (await SettingsProvider.instance.byName('debug_enabled')).value!);
 
     ChatBotRequest request = ChatBotRequest(
-        topic: topic, model: model, questions: await _questions(transcription));
+        topic: topic,
+        model: model,
+        questions: await _questions(transcription),
+        isDebug: debugEnabled);
 
     List<Answer> answers = List.empty();
 
