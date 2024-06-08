@@ -30,6 +30,7 @@ class ClientService {
         port: port,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
+    _logger.d('Channel (re)initialized. Host - $host, port - $port');
     return OpenAiApiClient(channel);
   }
 

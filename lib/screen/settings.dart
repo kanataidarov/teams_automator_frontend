@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/default_setting_modal.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/reinit_modal.dart';
 import 'package:interview_automator_frontend/widget/setting_modal.dart';
+import 'package:logger/logger.dart' show Level, Logger;
 import 'package:settings_ui/settings_ui.dart';
+
+Logger _logger = Logger(level: Level.debug);
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -15,6 +19,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final ValueNotifier<bool> _needRefreshSettings = ValueNotifier(false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,18 +52,23 @@ class _SettingsPageState extends State<SettingsPage> {
   normal(List<Setting> s) => SettingsList(sections: _buildTiles(s));
 
   Widget settings(BuildContext context) {
-    return FutureBuilder<List<Setting>>(
-        future: _fetchSettings(),
-        builder: (BuildContext ctx, AsyncSnapshot<List<Setting>> snapshot) {
-          Widget child;
-          if (snapshot.hasData) {
-            child = normal(snapshot.data!);
-          } else if (snapshot.hasError) {
-            child = error(snapshot);
-          } else {
-            child = waiting();
-          }
-          return child;
+    return ValueListenableBuilder(
+        valueListenable: _needRefreshSettings,
+        builder: (context, value, _) {
+          return FutureBuilder<List<Setting>>(
+              future: _fetchSettings(),
+              builder:
+                  (BuildContext ctx, AsyncSnapshot<List<Setting>> snapshot) {
+                Widget child;
+                if (snapshot.hasData) {
+                  child = normal(snapshot.data!);
+                } else if (snapshot.hasError) {
+                  child = error(snapshot);
+                } else {
+                  child = waiting();
+                }
+                return child;
+              });
         });
   }
 
@@ -71,7 +82,16 @@ class _SettingsPageState extends State<SettingsPage> {
               builder: (_) => _buildModalInt(setting)).then((newVal) {
             if (newVal != null) {
               setting.value = newVal;
-              SettingsProvider.instance.update(setting);
+              SettingsProvider.instance.update(setting).then((_) {
+                if ('Backend service' == setting.section) {
+                  ClientService.instance.initGrpcClient();
+                } else if ('init_file_path' == setting.name) {
+                  _needRefreshSettings.value = !_needRefreshSettings.value;
+                  _logger.i('Settings restored to defaults from `${setting.value}`');
+                } else if ('debug_enabled' == setting.name) {
+                  _needRefreshSettings.value = !_needRefreshSettings.value;
+                }
+              });
             }
           });
         });
