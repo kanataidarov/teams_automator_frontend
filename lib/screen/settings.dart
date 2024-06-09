@@ -82,9 +82,9 @@ class _SettingsPageState extends State<SettingsPage> {
               builder: (_) => _buildModalInt(setting)).then((newVal) {
             if (newVal != null) {
               setting.value = newVal;
-              SettingsProvider.instance.update(setting).then((_) {
+              SettingsProvider.instance.update(setting).then((_) async {
                 if ('Backend service' == setting.section) {
-                  ClientService.instance.initGrpcClient();
+                  await ClientService.instance.initGrpcClient();
                 } else if ('init_file_path' == setting.name) {
                   _needRefreshSettings.value = !_needRefreshSettings.value;
                   _logger.i('Settings restored to defaults from `${setting.value}`');

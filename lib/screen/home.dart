@@ -27,15 +27,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    recorder = AudioRecorder();
-    _openTheRecorder().then((val) {
-      setState(() {
-        recorderReady = val;
-      });
-    });
-    _logger.d('Recorder initialized');
-
     super.initState();
+
+    if (!recorderReady) {
+      recorder = AudioRecorder();
+      _openTheRecorder().then((val) {
+        setState(() {
+          recorderReady = val;
+        });
+      });
+      _logger.d('Recorder (re)initialized');
+    }
   }
 
   @override
@@ -88,8 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!recorderReady) return;
 
     try {
-      await recorder.stop().then((val) {
-        _logger.i('Stopped recording - $val');
+      recorder.stop().then((path) {
+        _logger.i('Stopped recording - $path');
+        SettingsProvider.instance.byName('debug_enabled').then((stng) {
+          if (!bool.parse(stng.value!)) handleClient(context);
+        });
       });
     } catch (e) {
       _logger.e('Error stopping recording - ${e.toString()}', error: e);
@@ -115,9 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void handleClient(BuildContext context) async {
     // TODO solve callback hell
     _getRecordingPath().then((path) {
-      ClientService.instance
-          .transcribe(path)
-          .then((transcription) {
+
+      ClientService.instance.transcribe(path).then((transcription) {
         SettingsProvider.instance.byName('transcription').then((stng) async {
           stng.value = transcription;
           await SettingsProvider.instance.update(stng);

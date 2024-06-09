@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:format/format.dart';
 import 'package:grpc/grpc.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbgrpc.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
@@ -28,8 +29,9 @@ class ClientService {
         int.parse((await SettingsProvider.instance.byName('port')).value!);
     final channel = ClientChannel(host,
         port: port,
-        options:
-            const ChannelOptions(credentials: ChannelCredentials.insecure()));
+        options: const ChannelOptions(
+            credentials: ChannelCredentials.insecure(),
+            connectTimeout: Duration(seconds: 10)));
     _logger.d('Channel (re)initialized. Host - $host, port - $port');
     return OpenAiApiClient(channel);
   }
@@ -91,11 +93,15 @@ class ClientService {
   }
 
   Future<List<Question>> _questions(String transcription) async {
-    var qas = (await DbHelper.instance.database).query(Qa.tableName);
+    var db = await DbHelper.instance.database;
+    var qas = db.query(Qa.tableName);
+    var transcription =
+        (await SettingsProvider.instance.byName('transcription')).value!;
 
     List<Question> questions = List.empty(growable: true);
     for (var qaMap in await qas) {
       var qa = Qa.fromMap(qaMap);
+      qa.question!.format({'transcription': transcription});
       questions.add(Question(qid: qa.id, content: qa.question));
     }
 

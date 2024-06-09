@@ -120,8 +120,8 @@ class _QaModalState extends State<QaModal> {
             child: const Text('Discard')),
         TextButton(
             onPressed: () {
-              qa.title = 'QA $_currentOrd';
-              qa.ord = _currentOrd;
+              qa.title ??= 'Q&A $_currentOrd';
+              qa.ord ??= _currentOrd;
               qa.question = _questionControl.text;
               qa.qparam = _qparamControl.text;
               Navigator.pop(ctx, qa);
