@@ -76,9 +76,9 @@ class ClientService {
         model: model,
         questions: await _questions(transcription),
         isDebug: debugEnabled);
+    _logger.d('Sending request - ${request}');
 
     List<Answer> answers = List.empty();
-
     try {
       var cli = await client;
       answers = (await cli.chatBot(request)).answers;
@@ -95,13 +95,11 @@ class ClientService {
   Future<List<Question>> _questions(String transcription) async {
     var db = await DbHelper.instance.database;
     var qas = db.query(Qa.tableName);
-    var transcription =
-        (await SettingsProvider.instance.byName('transcription')).value!;
 
     List<Question> questions = List.empty(growable: true);
     for (var qaMap in await qas) {
       var qa = Qa.fromMap(qaMap);
-      qa.question!.format({'transcription': transcription});
+      qa.question = qa.question!.format({'transcription': transcription});
       questions.add(Question(qid: qa.id, content: qa.question));
     }
 
