@@ -23,6 +23,10 @@ class ClientService {
     return _client!;
   }
 
+  void setClient(OpenAiApiClient c) {
+    _client = c;
+  }
+
   Future<OpenAiApiClient> initGrpcClient() async {
     final host = (await SettingsProvider.instance.byName('host')).value!;
     final port =
@@ -76,7 +80,7 @@ class ClientService {
         model: model,
         questions: await _questions(transcription),
         isDebug: debugEnabled);
-    _logger.d('Sending request - ${request}');
+    _logger.d('Sending request - $request');
 
     List<Answer> answers = List.empty();
     try {

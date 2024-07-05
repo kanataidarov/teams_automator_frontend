@@ -84,10 +84,12 @@ class _SettingsPageState extends State<SettingsPage> {
               setting.value = newVal;
               SettingsProvider.instance.update(setting).then((_) async {
                 if ('Backend service' == setting.section) {
-                  await ClientService.instance.initGrpcClient();
+                  ClientService.instance
+                      .setClient(await ClientService.instance.initGrpcClient());
                 } else if ('init_file_path' == setting.name) {
                   _needRefreshSettings.value = !_needRefreshSettings.value;
-                  _logger.i('Settings restored to defaults from `${setting.value}`');
+                  _logger.i(
+                      'Settings restored to defaults from `${setting.value}`');
                 } else if ('debug_enabled' == setting.name) {
                   _needRefreshSettings.value = !_needRefreshSettings.value;
                 }
