@@ -101,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildModalInt(Setting setting) {
     if ('init_file_path' == setting.name) {
-      return ReinitModal(path: setting.value!);
+      return ReinitModal(setting: setting);
     }
     switch (setting.type) {
       case 'text':

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
+import 'package:interview_automator_frontend/widget/style.dart';
+
+import '../storage/model/settings.dart';
 
 class ReinitModal extends StatefulWidget {
-  final String path;
-  const ReinitModal({super.key, required this.path});
+  final Setting setting;
+  const ReinitModal({super.key, required this.setting});
 
   @override
   State<StatefulWidget> createState() => _ReinitModalState();
@@ -27,15 +30,27 @@ class _ReinitModalState extends State<ReinitModal> {
 
   @override
   Widget build(BuildContext ctx) {
-    _tfControl.text = widget.path;
+    _tfControl.text = widget.setting.value!;
 
     return AlertDialog(
-      title: const Text('Initialization data path'),
-      content: TextField(
-          controller: _tfControl,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          expands: true),
+      title: Text(widget.setting.title!),
+      content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              widget.setting.description!,
+              style: ModalsStyle.descriptionStyle,
+            ),
+            const SizedBox(
+              height: 9,
+            ),
+            Expanded(
+                child: TextField(
+                    controller: _tfControl,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    expands: true))
+          ]),
       actions: [
         TextButton(
             onPressed: () {

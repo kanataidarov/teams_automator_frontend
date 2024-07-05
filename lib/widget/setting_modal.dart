@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
+import 'package:interview_automator_frontend/widget/style.dart';
 
 class SettingModal extends StatefulWidget {
   final Setting setting;
@@ -31,11 +32,23 @@ class _SettingModalState extends State<SettingModal> {
 
     return AlertDialog(
       title: Text(widget.setting.title!),
-      content: TextField(
-          controller: tfControl,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          expands: true),
+      content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              widget.setting.description!,
+              style: ModalsStyle.descriptionStyle,
+            ),
+            const SizedBox(
+              height: 9,
+            ),
+            Expanded(
+                child: TextField(
+                    controller: tfControl,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    expands: true))
+          ]),
       actions: [
         TextButton(
             onPressed: () {
