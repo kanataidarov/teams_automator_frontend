@@ -1,0 +1,103 @@
+{
+  "settings": [
+    {
+      "id": 1,
+      "name": "host",
+      "value": "localhost",
+      "title": "Backend Host",
+      "section": "Backend service",
+      "type": "text",
+      "description": "Hostname/IP of the Interview Automator backend"
+    },
+    {
+      "id": 2,
+      "name": "port",
+      "value": "44045",
+      "title": "Backend Port",
+      "section": "Backend service",
+      "type": "integer",
+      "description": "Port of the Interview Automator backend"
+    },
+    {
+      "id": 3,
+      "name": "model",
+      "value": "gpt-4o",
+      "title": "ChatGPT model",
+      "section": "Backend service",
+      "type": "string",
+      "description": "ChatGPT API model version"
+    },
+    {
+      "id": 4,
+      "name": "topic",
+      "value": "Prepare Yourself to answer job interview questions.",
+      "title": "Conversation Topic",
+      "section": "Backend service",
+      "type": "text",
+      "description": "First message to ChatGPT that defines topic of the whole conversation"
+    },
+    {
+      "id": 5,
+      "name": "debug_enabled",
+      "value": "false",
+      "title": "Debug enabled",
+      "section": "Advanced",
+      "type": "bool",
+      "description": "If enabled, some debug related features will be visible"
+    },
+    {
+      "id": 6,
+      "name": "transcription",
+      "value": "",
+      "title": "Transcription",
+      "section": "hidden",
+      "type": "text",
+      "description": "Transcription of voice message sent to backend"
+    },
+    {
+      "id": 7,
+      "name": "init_file_path",
+      "value": "assets/interview_automator_init.json",
+      "title": "Initialization file path",
+      "section": "hidden",
+      "type": "text",
+      "description": "Path to file with initialization data in the device's local filesystem"
+    },
+    {
+      "id": 8,
+      "name": "voice_file_path",
+      "value": "true;/data/user/0/com.github.kanataidarov.interview_automator.interview_automator_frontend/app_flutter/voice_msg.wav",
+      "title": "Voice message file path",
+      "section": "Advanced",
+      "type": "default_text",
+      "description": "Path to which store file with voice recording, can be default App path"
+    },
+    {
+      "id": 9,
+      "name": "timeout",
+      "value": "10",
+      "title": "Timeout to Backend",
+      "section": "Backend service",
+      "type": "integer",
+      "description": "Connect timeout (seconds) to Interview Automator backend"
+    }
+  ],
+  "qa": [
+    {
+      "id": 1,
+      "title": "Q&A 1",
+      "ord": 1,
+      "question": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nExtract all questions asked by interviewer.",
+      "answer": "",
+      "qparam": ""
+    },
+    {
+      "id": 2,
+      "title": "Q&A 2",
+      "ord": 2,
+      "question": "`Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "answer": "",
+      "qparam": ""
+    }
+  ]
+}

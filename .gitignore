@@ -45,4 +45,4 @@ app.*.map.json
 pubspec.lock
 # You have to change value within template provided (assets/interview_automator_init_template.json),
 # if you want to load your own initial configuration settings
-assets/interview_automator_init.json
+assets/interview_automator_init_secret.json
