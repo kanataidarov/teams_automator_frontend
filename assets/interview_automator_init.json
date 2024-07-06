@@ -95,7 +95,7 @@
       "id": 2,
       "title": "Q&A 2",
       "ord": 2,
-      "question": "`Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "question": "`Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
       "answer": "",
       "qparam": ""
     }
