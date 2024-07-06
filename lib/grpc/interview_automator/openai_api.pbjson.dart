@@ -82,12 +82,25 @@ const Question$json = {
   '2': [
     {'1': 'qid', '3': 1, '4': 1, '5': 5, '10': 'qid'},
     {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+    {'1': 'ans_type', '3': 3, '4': 1, '5': 14, '6': '.interview_automator.Question.AnswerType', '10': 'ansType'},
+  ],
+  '4': [Question_AnswerType$json],
+};
+
+@$core.Deprecated('Use questionDescriptor instead')
+const Question_AnswerType$json = {
+  '1': 'AnswerType',
+  '2': [
+    {'1': 'RAW', '2': 0},
+    {'1': 'JSON_ONLY', '2': 1},
   ],
 };
 
 /// Descriptor for `Question`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List questionDescriptor = $convert.base64Decode(
-    'CghRdWVzdGlvbhIQCgNxaWQYASABKAVSA3FpZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50');
+    'CghRdWVzdGlvbhIQCgNxaWQYASABKAVSA3FpZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50Ek'
+    'MKCGFuc190eXBlGAMgASgOMiguaW50ZXJ2aWV3X2F1dG9tYXRvci5RdWVzdGlvbi5BbnN3ZXJU'
+    'eXBlUgdhbnNUeXBlIiQKCkFuc3dlclR5cGUSBwoDUkFXEAASDQoJSlNPTl9PTkxZEAE=');
 
 @$core.Deprecated('Use chatBotResponseDescriptor instead')
 const ChatBotResponse$json = {

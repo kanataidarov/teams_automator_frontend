@@ -8,21 +8,23 @@ class Qa {
   static const tableName = 'qa';
   static const createScript = '''CREATE TABLE $tableName (
         id INTEGER PRIMARY KEY,
-        title TEXT NOT NULL,
+        title VARCHAR(55) NOT NULL,
         ord INTEGER NOT NULL,
         question TEXT NOT NULL,
+        qparam TEXT,
         answer TEXT,
-        qparam TEXT
+        anstype INTEGER NOT NULL
       );''';
 
   int? id;
   String? title;
   int? ord;
   String? question;
-  String? answer;
   String? qparam;
+  String? answer;
+  int? anstype;
 
-  Qa({this.id, this.title, this.ord, this.question, this.answer, this.qparam});
+  Qa({this.id, this.title, this.ord, this.question, this.qparam, this.answer, this.anstype});
 
   Map<String, dynamic> toMap() {
     return {
@@ -30,8 +32,9 @@ class Qa {
       'title': title,
       'ord': ord,
       'question': question,
+      'qparam': qparam,
       'answer': answer,
-      'qparam': qparam
+      'anstype': anstype
     };
   }
 
@@ -40,8 +43,9 @@ class Qa {
     title = map['title'];
     ord = map['ord'];
     question = map['question'];
-    answer = map['answer'];
     qparam = map['qparam'];
+    answer = map['answer'];
+    anstype = map['anstype'];
   }
 
   @override

@@ -120,7 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void handleClient(BuildContext context) async {
     // TODO solve callback hell
     _getRecordingPath().then((path) {
-
       ClientService.instance.transcribe(path).then((transcription) {
         SettingsProvider.instance.byName('transcription').then((stng) async {
           stng.value = transcription;
@@ -140,12 +139,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _debugButton(BuildContext context, bool isDebug) => !isDebug
-      ? Container()
-      : FloatingActionButton(
-          onPressed: () => handleClient(context),
-          tooltip: 'Debug',
-          child: const Icon(Icons.telegram_outlined));
+  _debugButton(BuildContext context) => FutureBuilder<bool>(
+      future: isDebugEnabled(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        Widget cnt = Container();
+        if (snapshot.hasData) {
+          bool isDebug = snapshot.data!;
+          if (isDebug) {
+            cnt = FloatingActionButton(
+                onPressed: () => handleClient(context),
+                tooltip: 'Debug',
+                child: const Icon(Icons.telegram_outlined));
+          }
+        }
+        return cnt;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -160,14 +168,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        floatingActionButton: FutureBuilder<bool>(
-            future: isDebugEnabled(),
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              Widget cont = Container();
-              if (snapshot.hasData) {
-                cont = _debugButton(context, snapshot.data!);
-              }
-              return cont;
-            }));
+        floatingActionButton: _debugButton(context));
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
+import 'package:interview_automator_frontend/widget/style.dart';
 
 class QaModal extends StatefulWidget {
   final Qa qa;
@@ -14,12 +16,14 @@ class QaModal extends StatefulWidget {
 class _QaModalState extends State<QaModal> {
   late TextEditingController _questionControl;
   late TextEditingController _qparamControl;
+  late TextEditingController _answerControl;
   late int _currentOrd;
 
   @override
   void initState() {
     _questionControl = TextEditingController();
     _qparamControl = TextEditingController();
+    _answerControl = TextEditingController();
 
     super.initState();
   }
@@ -28,6 +32,7 @@ class _QaModalState extends State<QaModal> {
   void dispose() {
     _questionControl.dispose();
     _qparamControl.dispose();
+    _answerControl.dispose();
     super.dispose();
   }
 
@@ -37,6 +42,7 @@ class _QaModalState extends State<QaModal> {
 
     _questionControl.text = qa.question!;
     _qparamControl.text = (qa.qparam?.isEmpty ?? true) ? '' : qa.qparam!;
+    _answerControl.text = (qa.answer?.isEmpty ?? true) ? '' : qa.answer!;
 
     Future<int> currentOrd() async {
       int? currentOrd;
@@ -67,12 +73,37 @@ class _QaModalState extends State<QaModal> {
           const SizedBox(
             height: 9,
           ),
+          const Text(
+            'Question params',
+            style: ModalsStyle.descriptionStyle,
+          ),
+          const SizedBox(
+            height: 9,
+          ),
           Expanded(
             child: TextField(
               controller: _qparamControl,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               expands: true,
+            ),
+          ),
+          const SizedBox(
+            height: 9,
+          ),
+          Text(
+            'Answer type: ${Question_AnswerType.values[qa.anstype!].name}',
+            style: ModalsStyle.descriptionStyle,
+          ),
+          const SizedBox(
+            height: 9,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _answerControl,
+              expands: true,
+              maxLines: null,
+              readOnly: true,
             ),
           )
         ];

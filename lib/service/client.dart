@@ -104,7 +104,10 @@ class ClientService {
     for (var qaMap in await qas) {
       var qa = Qa.fromMap(qaMap);
       qa.question = qa.question!.format({'transcription': transcription});
-      questions.add(Question(qid: qa.id, content: qa.question));
+      questions.add(Question(
+          qid: qa.id,
+          content: qa.question,
+          ansType: Question_AnswerType.values[qa.anstype!]));
     }
 
     return questions;

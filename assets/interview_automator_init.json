@@ -88,16 +88,18 @@
       "title": "Q&A 1",
       "ord": 1,
       "question": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nExtract all questions asked by interviewer.",
+      "qparam": "",
       "answer": "",
-      "qparam": ""
+      "anstype": 0
     },
     {
       "id": 2,
       "title": "Q&A 2",
       "ord": 2,
-      "question": "`Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "question": "Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "qparam": "",
       "answer": "",
-      "qparam": ""
+      "anstype": 1
     }
   ]
 }

@@ -8,11 +8,11 @@ class Setting {
   static const tableName = 'settings';
   static const createScript = '''CREATE TABLE $tableName (
         id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
+        name VARCHAR(55) NOT NULL,
         value TEXT NOT NULL,
-        title TEXT NOT NULL,
-        section TEXT NOT NULL,
-        type TEXT NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        section VARCHAR(22) NOT NULL,
+        type VARCHAR(22) NOT NULL,
         description TEXT
       );''';
 

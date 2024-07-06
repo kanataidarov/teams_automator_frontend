@@ -14,6 +14,10 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'openai_api.pbenum.dart';
+
+export 'openai_api.pbenum.dart';
+
 class TranscribeRequest extends $pb.GeneratedMessage {
   factory TranscribeRequest({
     FileHeader? header,
@@ -298,6 +302,7 @@ class Question extends $pb.GeneratedMessage {
   factory Question({
     $core.int? qid,
     $core.String? content,
+    Question_AnswerType? ansType,
   }) {
     final $result = create();
     if (qid != null) {
@@ -305,6 +310,9 @@ class Question extends $pb.GeneratedMessage {
     }
     if (content != null) {
       $result.content = content;
+    }
+    if (ansType != null) {
+      $result.ansType = ansType;
     }
     return $result;
   }
@@ -315,6 +323,7 @@ class Question extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Question', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'qid', $pb.PbFieldType.O3)
     ..aOS(2, _omitFieldNames ? '' : 'content')
+    ..e<Question_AnswerType>(3, _omitFieldNames ? '' : 'ansType', $pb.PbFieldType.OE, defaultOrMaker: Question_AnswerType.RAW, valueOf: Question_AnswerType.valueOf, enumValues: Question_AnswerType.values)
     ..hasRequiredFields = false
   ;
 
@@ -356,6 +365,15 @@ class Question extends $pb.GeneratedMessage {
   $core.bool hasContent() => $_has(1);
   @$pb.TagNumber(2)
   void clearContent() => clearField(2);
+
+  @$pb.TagNumber(3)
+  Question_AnswerType get ansType => $_getN(2);
+  @$pb.TagNumber(3)
+  set ansType(Question_AnswerType v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasAnsType() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAnsType() => clearField(3);
 }
 
 class ChatBotResponse extends $pb.GeneratedMessage {

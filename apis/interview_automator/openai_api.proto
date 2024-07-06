@@ -31,8 +31,14 @@ message ChatBotRequest {
 }
 
 message Question {
+  enum AnswerType {
+    RAW = 0;
+    JSON_ONLY = 1;
+  }
+
   int32 qid = 1;
   string content = 2;
+  AnswerType ans_type = 3;
 }
 
 message ChatBotResponse {
