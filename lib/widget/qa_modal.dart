@@ -62,6 +62,13 @@ class _QaModalState extends State<QaModal> {
     }
 
     normal() => <Widget>[
+          Text(
+            'Stage: ${qa.stage!}',
+            style: ModalsStyle.descriptionStyle,
+          ),
+          const SizedBox(
+            height: 9,
+          ),
           Expanded(
             child: TextField(
               controller: _questionControl,

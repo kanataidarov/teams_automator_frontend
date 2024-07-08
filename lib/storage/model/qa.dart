@@ -13,7 +13,8 @@ class Qa {
         question TEXT NOT NULL,
         qparam TEXT,
         answer TEXT,
-        anstype INTEGER NOT NULL
+        anstype INTEGER NOT NULL,
+        stage VARCHAR(20) NOT NULL
       );''';
 
   int? id;
@@ -23,8 +24,17 @@ class Qa {
   String? qparam;
   String? answer;
   int? anstype;
+  String? stage;
 
-  Qa({this.id, this.title, this.ord, this.question, this.qparam, this.answer, this.anstype});
+  Qa(
+      {this.id,
+      this.title,
+      this.ord,
+      this.question,
+      this.qparam,
+      this.answer,
+      this.anstype,
+      this.stage});
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,7 +44,8 @@ class Qa {
       'question': question,
       'qparam': qparam,
       'answer': answer,
-      'anstype': anstype
+      'anstype': anstype,
+      'stage': stage
     };
   }
 
@@ -46,6 +57,7 @@ class Qa {
     qparam = map['qparam'];
     answer = map['answer'];
     anstype = map['anstype'];
+    stage = map['stage'];
   }
 
   @override

@@ -93,6 +93,7 @@ const Question_AnswerType$json = {
   '2': [
     {'1': 'RAW', '2': 0},
     {'1': 'JSON_ONLY', '2': 1},
+    {'1': 'SNIPPET', '2': 2},
   ],
 };
 
@@ -100,7 +101,8 @@ const Question_AnswerType$json = {
 final $typed_data.Uint8List questionDescriptor = $convert.base64Decode(
     'CghRdWVzdGlvbhIQCgNxaWQYASABKAVSA3FpZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50Ek'
     'MKCGFuc190eXBlGAMgASgOMiguaW50ZXJ2aWV3X2F1dG9tYXRvci5RdWVzdGlvbi5BbnN3ZXJU'
-    'eXBlUgdhbnNUeXBlIiQKCkFuc3dlclR5cGUSBwoDUkFXEAASDQoJSlNPTl9PTkxZEAE=');
+    'eXBlUgdhbnNUeXBlIjEKCkFuc3dlclR5cGUSBwoDUkFXEAASDQoJSlNPTl9PTkxZEAESCwoHU0'
+    '5JUFBFVBAC');
 
 @$core.Deprecated('Use chatBotResponseDescriptor instead')
 const ChatBotResponse$json = {

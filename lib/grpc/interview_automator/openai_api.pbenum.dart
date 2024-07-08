@@ -16,10 +16,12 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class Question_AnswerType extends $pb.ProtobufEnum {
   static const Question_AnswerType RAW = Question_AnswerType._(0, _omitEnumNames ? '' : 'RAW');
   static const Question_AnswerType JSON_ONLY = Question_AnswerType._(1, _omitEnumNames ? '' : 'JSON_ONLY');
+  static const Question_AnswerType SNIPPET = Question_AnswerType._(2, _omitEnumNames ? '' : 'SNIPPET');
 
   static const $core.List<Question_AnswerType> values = <Question_AnswerType> [
     RAW,
     JSON_ONLY,
+    SNIPPET,
   ];
 
   static final $core.Map<$core.int, Question_AnswerType> _byValue = $pb.ProtobufEnum.initByValue(values);

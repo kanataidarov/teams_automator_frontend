@@ -34,6 +34,7 @@ message Question {
   enum AnswerType {
     RAW = 0;
     JSON_ONLY = 1;
+    SNIPPET = 2;
   }
 
   int32 qid = 1;
