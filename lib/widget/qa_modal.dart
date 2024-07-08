@@ -58,6 +58,9 @@ class _QaModalState extends State<QaModal> {
       setState(() {
         _currentOrd = currentOrd!;
       });
+      // TODO make stage and anstype non-constant
+      qa.stage = 'theory';
+      qa.anstype = Question_AnswerType.RAW.value;
       return currentOrd;
     }
 
