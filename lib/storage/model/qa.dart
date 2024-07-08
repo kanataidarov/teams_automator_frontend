@@ -1,10 +1,11 @@
 import 'package:interview_automator_frontend/storage/db.dart';
+import 'package:interview_automator_frontend/storage/model/parent.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:sqflite/sqflite.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
-class Qa {
+class Qa extends DbModel {
   static const tableName = 'qa';
   static const createScript = '''CREATE TABLE $tableName (
         id INTEGER PRIMARY KEY,
@@ -17,7 +18,6 @@ class Qa {
         stage VARCHAR(20) NOT NULL
       );''';
 
-  int? id;
   String? title;
   int? ord;
   String? question;
@@ -27,7 +27,7 @@ class Qa {
   String? stage;
 
   Qa(
-      {this.id,
+      {super.id,
       this.title,
       this.ord,
       this.question,
@@ -36,6 +36,7 @@ class Qa {
       this.anstype,
       this.stage});
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -49,8 +50,7 @@ class Qa {
     };
   }
 
-  Qa.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
+  Qa.fromMap(Map<String, dynamic> map) : super(id: map['id']) {
     title = map['title'];
     ord = map['ord'];
     question = map['question'];

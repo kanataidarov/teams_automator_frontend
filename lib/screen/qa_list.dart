@@ -1,10 +1,13 @@
-import 'dart:ui';
+import '../widget/error_page.dart';
+import '../widget/waiting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/qa_modal.dart';
+import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 import 'package:logger/logger.dart' show Level, Logger;
+import 'package:settings_ui/settings_ui.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -16,21 +19,6 @@ class QaList extends StatefulWidget {
 }
 
 class _QaListState extends State<QaList> {
-  List<Qa> _items = List.empty();
-
-  @override
-  void initState() {
-    super.initState();
-
-    DbHelper.instance.database.then((db) {
-      setState(() {
-        db.query(Qa.tableName, orderBy: 'ord').then((maps) {
-          _items = List.generate(maps.length, (i) => Qa.fromMap(maps[i]));
-        });
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,80 +33,67 @@ class _QaListState extends State<QaList> {
   }
 
   Widget _qaList(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color oddItemColor = colorScheme.secondary.withOpacity(0.05);
-    final Color evenItemColor = colorScheme.secondary.withOpacity(0.15);
-    final Color draggableItemColor = colorScheme.secondary;
-
-    Widget proxyDecorator(
-        Widget child, int index, Animation<double> animation) {
-      return AnimatedBuilder(
-        animation: animation,
-        builder: (BuildContext context, Widget? child) {
-          final double animValue = Curves.easeInOut.transform(animation.value);
-          final double elevation = lerpDouble(0, 6, animValue)!;
-          return Material(
-            elevation: elevation,
-            color: draggableItemColor,
-            shadowColor: draggableItemColor,
-            child: child,
-          );
-        },
-        child: child,
-      );
-    }
-
-    List<Widget> generate(BuildContext context) {
-      return List.generate(
-          _items.length,
-          (i) => ReorderableDragStartListener(
-              index: i,
-              key: Key('$i'),
-              child: Card(
-                child: ListTile(
-                    title: Text(_items[i].title!),
-                    tileColor: i.isOdd ? oddItemColor : evenItemColor,
-                    leading: const Icon(Icons.drag_indicator),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete_outlined),
-                      onPressed: () {
-                        final rec = _items[i];
-                        QaProvider.instance.delete(rec);
-                        setState(() {
-                          _items.removeAt(i);
-                        });
-                        _logger.d('$rec deleted');
-                      },
-                    ),
-                    onTap: () {
-                      showDialog<Qa>(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              QaModal(qa: _items[i])).then((qa) {
-                        if (null != qa) {
-                          QaProvider.instance.update(qa);
-                          _logger.d('$qa updated');
-                          setState(() {});
-                        }
-                      });
-                    }),
-              )));
-    }
-
-    return ReorderableListView(
-      padding: const EdgeInsets.symmetric(horizontal: 33),
-      proxyDecorator: proxyDecorator,
-      children: generate(context),
-      onReorder: (int oldIndex, int newIndex) {
-        setState(() {
-          if (oldIndex < newIndex) {
-            newIndex -= 1;
+    return FutureBuilder<List<Qa>>(
+        future: _fetchQas(),
+        builder: (BuildContext ctx, AsyncSnapshot<List<Qa>> snapshot) {
+          Widget child;
+          if (snapshot.hasData) {
+            child = SettingsList(sections: _sections(snapshot.data!));
+          } else if (snapshot.hasError) {
+            child = ErrorPage(snapshot: snapshot);
+          } else {
+            child = const WaitingPage();
           }
-          final Qa item = _items.removeAt(oldIndex);
-          _items.insert(newIndex, item);
+          return child;
         });
-      },
-    );
+  }
+
+  Future<List<Qa>> _fetchQas() async {
+    final recs = (await DbHelper.instance.database).query('qa');
+
+    final List<Qa> qas = List.empty(growable: true);
+    for (var stngRec in await recs) {
+      var stng = Qa.fromMap(stngRec);
+
+      qas.add(stng);
+    }
+
+    return qas;
+  }
+
+  List<SettingsSection> _sections(List<Qa> qas) {
+    Map<String, List<SettingsTile>> tilesMap = {};
+    for (var qa in qas) {
+      if (!tilesMap.containsKey(qa.stage!)) {
+        tilesMap[qa.stage!] = List.empty(growable: true);
+      }
+      tilesMap[qa.stage!]!.add(_card(context, qa));
+    }
+
+    List<SettingsSection> sections = List.empty(growable: true);
+    for (var section in tilesMap.keys) {
+      sections.add(SettingsSection(
+          title: Text(toBeginningOfSentenceCase(section)),
+          tiles: tilesMap[section]!));
+    }
+    return sections;
+  }
+
+  SettingsTile _card(BuildContext context, Qa qa) {
+    return SettingsTile.navigation(
+        title: Text(qa.title!),
+        leading: const Icon(Icons.textsms_outlined),
+        onPressed: (BuildContext context) {
+          showDialog<Qa>(
+              context: context,
+              builder: (BuildContext context) => QaModal(qa: qa)).then((qa) {
+            if (null != qa) {
+              QaProvider.instance.update(qa).then((_) async {
+                _logger.d('$qa updated');
+              });
+            }
+          });
+        });
   }
 
   void _addQa() {
@@ -131,9 +106,7 @@ class _QaListState extends State<QaList> {
       if (null != newQa) {
         QaProvider.instance.insert(newQa).then((id) {
           newQa.id = id;
-          setState(() {
-            _items.add(newQa);
-          });
+          setState(() {});
         });
       }
     });

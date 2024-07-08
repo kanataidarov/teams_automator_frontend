@@ -8,6 +8,8 @@ import 'package:interview_automator_frontend/widget/reinit_modal.dart';
 import 'package:interview_automator_frontend/widget/setting_modal.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:settings_ui/settings_ui.dart';
+import '../widget/error_page.dart';
+import '../widget/waiting_page.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -27,31 +29,11 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(title: const Text('Settings')),
         drawer: const DrawerWidget(),
         body: SafeArea(
-          child: settings(context),
+          child: _settings(context),
         ));
   }
 
-  error(AsyncSnapshot<List<Setting>> snapshot) => Column(children: [
-        const Icon(
-          Icons.error_outline,
-          color: Colors.red,
-          size: 60,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Text('Error: ${snapshot.error}'),
-        )
-      ]);
-
-  waiting() => const SizedBox(
-        width: 99,
-        height: 99,
-        child: CircularProgressIndicator(),
-      );
-
-  normal(List<Setting> s) => SettingsList(sections: _buildTiles(s));
-
-  Widget settings(BuildContext context) {
+  Widget _settings(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: _needRefreshSettings,
         builder: (context, value, _) {
@@ -61,15 +43,51 @@ class _SettingsPageState extends State<SettingsPage> {
                   (BuildContext ctx, AsyncSnapshot<List<Setting>> snapshot) {
                 Widget child;
                 if (snapshot.hasData) {
-                  child = normal(snapshot.data!);
+                  child = SettingsList(sections: _sections(snapshot.data!));
                 } else if (snapshot.hasError) {
-                  child = error(snapshot);
+                  child = ErrorPage(snapshot: snapshot);
                 } else {
-                  child = waiting();
+                  child = const WaitingPage();
                 }
                 return child;
               });
         });
+  }
+
+  Future<List<Setting>> _fetchSettings() async {
+    final recs = (await DbHelper.instance.database).query('settings');
+
+    bool debugEnabled = await isDebugEnabled();
+
+    final List<Setting> stngs = List.empty(growable: true);
+    for (var stngRec in await recs) {
+      var stng = Setting.fromMap(stngRec);
+
+      if (!debugEnabled && 'hidden' == stng.section) {
+        continue;
+      }
+
+      stngs.add(stng);
+    }
+
+    return stngs;
+  }
+
+  List<SettingsSection> _sections(List<Setting> stngs) {
+    Map<String, List<SettingsTile>> tilesMap = {};
+    for (var stng in stngs) {
+      if (!tilesMap.containsKey(stng.section!)) {
+        tilesMap[stng.section!] = List.empty(growable: true);
+      }
+      tilesMap[stng.section!]!.add(_buildModal(stng));
+    }
+
+    List<SettingsSection> sections = List.empty(growable: true);
+    for (var section in tilesMap.keys) {
+      sections.add(
+          SettingsSection(title: Text(section), tiles: tilesMap[section]!));
+    }
+    return sections;
   }
 
   SettingsTile _buildModal(Setting setting) {
@@ -115,44 +133,6 @@ class _SettingsPageState extends State<SettingsPage> {
       default:
         return SettingModal(setting: setting);
     }
-  }
-
-  Future<List<Setting>> _fetchSettings() async {
-    final recs = (await DbHelper.instance.database).query('settings');
-
-    bool debugEnabled = await isDebugEnabled();
-
-    final List<Setting> stngs = List.empty(growable: true);
-    for (var stngRec in await recs) {
-      var stng = Setting.fromMap(stngRec);
-
-      if (!debugEnabled && 'hidden' == stng.section) {
-        continue;
-      }
-
-      stngs.add(stng);
-    }
-
-    return stngs;
-  }
-
-  List<SettingsSection> _buildTiles(List<Setting> stngs) {
-    Map<String, List<SettingsTile>> tilesMap = {};
-    for (var stng in stngs) {
-      if (!tilesMap.containsKey(stng.section!)) {
-        tilesMap[stng.section!] = List.empty(growable: true);
-        tilesMap[stng.section!]!.add(_buildModal(stng));
-      } else {
-        tilesMap[stng.section!]!.add(_buildModal(stng));
-      }
-    }
-
-    List<SettingsSection> sections = List.empty(growable: true);
-    for (var section in tilesMap.keys) {
-      sections.add(
-          SettingsSection(title: Text(section), tiles: tilesMap[section]!));
-    }
-    return sections;
   }
 }
 

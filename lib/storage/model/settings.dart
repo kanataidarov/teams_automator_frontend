@@ -1,10 +1,11 @@
 import 'package:interview_automator_frontend/storage/db.dart';
+import 'package:interview_automator_frontend/storage/model/parent.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:sqflite/sqflite.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
-class Setting {
+class Setting extends DbModel {
   static const tableName = 'settings';
   static const createScript = '''CREATE TABLE $tableName (
         id INTEGER PRIMARY KEY,
@@ -16,7 +17,6 @@ class Setting {
         description TEXT
       );''';
 
-  int? id;
   String? name;
   String? value;
   String? title;
@@ -25,7 +25,7 @@ class Setting {
   String? description;
 
   Setting(
-      {this.id,
+      {super.id,
       this.name,
       this.value,
       this.title,
@@ -33,6 +33,7 @@ class Setting {
       this.type,
       this.description});
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -45,8 +46,7 @@ class Setting {
     };
   }
 
-  Setting.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
+  Setting.fromMap(Map<String, dynamic> map) : super(id: map['id']) {
     name = map['name'];
     value = map['value'];
     title = map['title'];

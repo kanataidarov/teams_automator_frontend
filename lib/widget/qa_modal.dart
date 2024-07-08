@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
+import 'package:interview_automator_frontend/widget/error_page.dart';
 import 'package:interview_automator_frontend/widget/style.dart';
+import 'package:interview_automator_frontend/widget/waiting_page.dart';
+import 'package:intl/intl.dart';
 
 class QaModal extends StatefulWidget {
   final Qa qa;
@@ -17,7 +20,6 @@ class _QaModalState extends State<QaModal> {
   late TextEditingController _questionControl;
   late TextEditingController _qparamControl;
   late TextEditingController _answerControl;
-  late int _currentOrd;
 
   @override
   void initState() {
@@ -44,27 +46,21 @@ class _QaModalState extends State<QaModal> {
     _qparamControl.text = (qa.qparam?.isEmpty ?? true) ? '' : qa.qparam!;
     _answerControl.text = (qa.answer?.isEmpty ?? true) ? '' : qa.answer!;
 
-    Future<int> currentOrd() async {
-      int? currentOrd;
-      if (null != qa.ord) {
-        currentOrd = qa.ord!;
-      } else {
-        final res = (await DbHelper.instance.database)
-            .rawQuery('SELECT MAX(ord) as max_ord FROM ${Qa.tableName}');
+    Future<List<Qa>> fetchQa() async {
+      if (null == qa.ord) {
+        // TODO make stage, anstype choosable
+        qa.stage = 'theory';
+        qa.anstype = Question_AnswerType.RAW.value;
+        final res = (await DbHelper.instance.database).rawQuery(
+            'SELECT MAX(ord) as max_ord FROM ${Qa.tableName} WHERE stage = "${qa.stage}"');
         // next order number for new record
-        currentOrd = ((await res)[0]['max_ord'] as int) + 1;
+        qa.ord = ((await res)[0]['max_ord'] as int) + 1;
+        return [qa];
       }
-
-      setState(() {
-        _currentOrd = currentOrd!;
-      });
-      // TODO make stage and anstype non-constant
-      qa.stage = 'theory';
-      qa.anstype = Question_AnswerType.RAW.value;
-      return currentOrd;
+      return [qa];
     }
 
-    normal() => <Widget>[
+    buildInt() => <Widget>[
           Text(
             'Stage: ${qa.stage!}',
             style: ModalsStyle.descriptionStyle,
@@ -118,40 +114,20 @@ class _QaModalState extends State<QaModal> {
           )
         ];
 
-    error(AsyncSnapshot<int> snapshot) => <Widget>[
-          const Icon(
-            Icons.error_outline,
-            color: Colors.red,
-            size: 60,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Text('Error: ${snapshot.error}'),
-          ),
-        ];
-
-    waiting() => const <Widget>[
-          SizedBox(
-            width: 99,
-            height: 99,
-            child: CircularProgressIndicator(),
-          )
-        ];
-
     return AlertDialog(
       title: Text(null != qa.ord ? qa.title! : 'New Q&A'),
-      content: FutureBuilder<int>(
-          future: currentOrd(),
-          builder: (BuildContext ctx, AsyncSnapshot<int> snapshot) {
-            List<Widget> children;
+      content: FutureBuilder<List<Qa>>(
+          future: fetchQa(),
+          builder: (BuildContext ctx, AsyncSnapshot<List<Qa>> snapshot) {
+            Widget child;
             if (snapshot.hasData) {
-              children = normal();
+              child = Column(children: buildInt());
             } else if (snapshot.hasError) {
-              children = error(snapshot);
+              child = ErrorPage(snapshot: snapshot);
             } else {
-              children = waiting();
+              child = const WaitingPage();
             }
-            return Column(children: children);
+            return child;
           }),
       actions: [
         TextButton(
@@ -161,8 +137,8 @@ class _QaModalState extends State<QaModal> {
             child: const Text('Discard')),
         TextButton(
             onPressed: () {
-              qa.title ??= 'Q&A $_currentOrd';
-              qa.ord ??= _currentOrd;
+              qa.title ??=
+                  'Q&A ${toBeginningOfSentenceCase(qa.stage)} ${qa.ord}';
               qa.question = _questionControl.text;
               qa.qparam = _qparamControl.text;
               Navigator.pop(ctx, qa);
