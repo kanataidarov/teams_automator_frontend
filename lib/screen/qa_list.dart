@@ -62,7 +62,7 @@ class _QaListState extends State<QaList> {
   }
 
   List<SettingsSection> _sections(List<Qa> qas) {
-    Map<String, List<SettingsTile>> tilesMap = {};
+    Map<Stage, List<SettingsTile>> tilesMap = {};
     for (var qa in qas) {
       if (!tilesMap.containsKey(qa.stage!)) {
         tilesMap[qa.stage!] = List.empty(growable: true);
@@ -73,7 +73,7 @@ class _QaListState extends State<QaList> {
     List<SettingsSection> sections = List.empty(growable: true);
     for (var section in tilesMap.keys) {
       sections.add(SettingsSection(
-          title: Text(toBeginningOfSentenceCase(section)),
+          title: Text(toBeginningOfSentenceCase(section.name)),
           tiles: tilesMap[section]!));
     }
     return sections;

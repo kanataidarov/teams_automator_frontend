@@ -74,12 +74,15 @@ class ClientService {
         (await SettingsProvider.instance.byName('transcription')).value!;
     final debugEnabled = bool.parse(
         (await SettingsProvider.instance.byName('debug_enabled')).value!);
+    final stg = ChatBotRequest_Stage.values
+        .firstWhere((entry) => entry.name.toUpperCase() == stage.toUpperCase());
 
     ChatBotRequest request = ChatBotRequest(
         topic: topic,
         model: model,
         questions: await _questions(stage, transcription),
-        isDebug: debugEnabled);
+        isDebug: debugEnabled,
+        stage: stg);
     _logger.d('Sending request - $request');
 
     List<Answer> answers = List.empty();

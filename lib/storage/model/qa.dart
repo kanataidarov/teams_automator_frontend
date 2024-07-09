@@ -24,7 +24,7 @@ class Qa extends DbModel {
   String? qparam;
   String? answer;
   int? anstype;
-  String? stage;
+  Stage? stage;
 
   Qa(
       {super.id,
@@ -46,7 +46,7 @@ class Qa extends DbModel {
       'qparam': qparam,
       'answer': answer,
       'anstype': anstype,
-      'stage': stage
+      'stage': stage!.name
     };
   }
 
@@ -57,12 +57,14 @@ class Qa extends DbModel {
     qparam = map['qparam'];
     answer = map['answer'];
     anstype = map['anstype'];
-    stage = map['stage'];
+    stage = Stage.values.byName(map['stage']);
   }
 
   @override
   String toString() => '${Qa.tableName}(Id=$id,title=`$title`,order=$ord)';
 }
+
+enum Stage { theory, livecoding, softskills }
 
 class QaProvider {
   final _dbHelper = DbHelper.instance;

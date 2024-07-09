@@ -49,7 +49,7 @@ class _QaModalState extends State<QaModal> {
     Future<List<Qa>> fetchQa() async {
       if (null == qa.ord) {
         // TODO make stage, anstype choosable
-        qa.stage = 'theory';
+        qa.stage = Stage.theory;
         qa.anstype = Question_AnswerType.RAW.value;
         final res = (await DbHelper.instance.database).rawQuery(
             'SELECT MAX(ord) as max_ord FROM ${Qa.tableName} WHERE stage = "${qa.stage}"');
@@ -62,7 +62,7 @@ class _QaModalState extends State<QaModal> {
 
     buildInt() => <Widget>[
           Text(
-            'Stage: ${qa.stage!}',
+            'Stage: ${qa.stage!.name}',
             style: ModalsStyle.descriptionStyle,
           ),
           const SizedBox(
@@ -138,7 +138,7 @@ class _QaModalState extends State<QaModal> {
         TextButton(
             onPressed: () {
               qa.title ??=
-                  'Q&A ${toBeginningOfSentenceCase(qa.stage)} ${qa.ord}';
+                  'Q&A ${toBeginningOfSentenceCase(qa.stage!.name)} ${qa.ord}';
               qa.question = _questionControl.text;
               qa.qparam = _qparamControl.text;
               Navigator.pop(ctx, qa);

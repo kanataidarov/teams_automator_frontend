@@ -8,6 +8,7 @@ import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/debug_button.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/record_button.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:record/record.dart';
 
@@ -23,8 +24,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final AudioRecorder recorder;
+  late final AudioRecorder _recorder;
 
+  Stage _selectedStage = Stage.theory;
   bool _isRecording = false;
   bool _recorderReady = false;
 
@@ -33,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     if (!_recorderReady) {
-      recorder = AudioRecorder();
+      _recorder = AudioRecorder();
       _openTheRecorder().then((val) {
         setState(() {
           _recorderReady = val;
@@ -45,13 +47,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    recorder.dispose();
+    _recorder.dispose();
     DbHelper.instance.close();
     super.dispose();
   }
 
   Future<bool> _openTheRecorder() async {
-    var hasPerm = await recorder.hasPermission();
+    var hasPerm = await _recorder.hasPermission();
 
     if (!hasPerm) {
       _logger.w('Microphone permission not granted');
@@ -66,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String filePath = await _getRecordingPath();
 
     try {
-      await recorder.start(
+      await _recorder.start(
           const RecordConfig(
             encoder: AudioEncoder.wav,
           ),
@@ -93,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!_recorderReady) return;
 
     try {
-      recorder.stop().then((path) {
+      _recorder.stop().then((path) {
         _logger.i('Stopped recording - $path');
         SettingsProvider.instance.byName('debug_enabled').then((stng) {
           if (!bool.parse(stng.value!)) handleClient(context);
@@ -128,7 +130,9 @@ class _MyHomePageState extends State<MyHomePage> {
           await SettingsProvider.instance.update(stng);
         });
 
-        ClientService.instance.chatBot(context, 'theory').then((answers) async {
+        ClientService.instance
+            .chatBot(context, _selectedStage.name)
+            .then((answers) async {
           for (var answer in answers) {
             var qas = (await DbHelper.instance.database)
                 .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
@@ -146,14 +150,36 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
         drawer: const DrawerWidget(),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              RecordButton(isRecording: _isRecording, record: _record)
-            ],
-          ),
-        ),
+        body: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  DropdownButtonFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Stage', border: OutlineInputBorder()),
+                      items: Stage.values.map((Stage item) {
+                        return DropdownMenuItem(
+                            value: item,
+                            child: Row(children: [
+                              const Icon(Icons.question_answer_outlined),
+                              const SizedBox(width: 9),
+                              Text(toBeginningOfSentenceCase(item.name))
+                            ]));
+                      }).toList(),
+                      onChanged: (Stage? selectedItem) {
+                        setState(() {
+                          _selectedStage = selectedItem!;
+                        });
+                      },
+                      value: _selectedStage),
+                  Expanded(
+                      child: RecordButton(
+                          isRecording: _isRecording, record: _record))
+                ],
+              ),
+            )),
         floatingActionButton: DebugButton(context,
             isDebugEnabled: isDebugEnabled, handle: handleClient));
   }

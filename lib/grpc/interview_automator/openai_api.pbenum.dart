@@ -13,6 +13,23 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class ChatBotRequest_Stage extends $pb.ProtobufEnum {
+  static const ChatBotRequest_Stage THEORY = ChatBotRequest_Stage._(0, _omitEnumNames ? '' : 'THEORY');
+  static const ChatBotRequest_Stage LIVECODING = ChatBotRequest_Stage._(1, _omitEnumNames ? '' : 'LIVECODING');
+  static const ChatBotRequest_Stage SOFTSKILLS = ChatBotRequest_Stage._(2, _omitEnumNames ? '' : 'SOFTSKILLS');
+
+  static const $core.List<ChatBotRequest_Stage> values = <ChatBotRequest_Stage> [
+    THEORY,
+    LIVECODING,
+    SOFTSKILLS,
+  ];
+
+  static final $core.Map<$core.int, ChatBotRequest_Stage> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ChatBotRequest_Stage? valueOf($core.int value) => _byValue[value];
+
+  const ChatBotRequest_Stage._($core.int v, $core.String n) : super(v, n);
+}
+
 class Question_AnswerType extends $pb.ProtobufEnum {
   static const Question_AnswerType RAW = Question_AnswerType._(0, _omitEnumNames ? '' : 'RAW');
   static const Question_AnswerType JSON_ONLY = Question_AnswerType._(1, _omitEnumNames ? '' : 'JSON_ONLY');

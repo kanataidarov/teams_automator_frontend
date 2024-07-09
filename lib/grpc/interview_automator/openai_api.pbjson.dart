@@ -67,6 +67,18 @@ const ChatBotRequest$json = {
     {'1': 'model', '3': 2, '4': 1, '5': 9, '10': 'model'},
     {'1': 'questions', '3': 3, '4': 3, '5': 11, '6': '.interview_automator.Question', '10': 'questions'},
     {'1': 'is_debug', '3': 4, '4': 1, '5': 8, '10': 'isDebug'},
+    {'1': 'stage', '3': 5, '4': 1, '5': 14, '6': '.interview_automator.ChatBotRequest.Stage', '10': 'stage'},
+  ],
+  '4': [ChatBotRequest_Stage$json],
+};
+
+@$core.Deprecated('Use chatBotRequestDescriptor instead')
+const ChatBotRequest_Stage$json = {
+  '1': 'Stage',
+  '2': [
+    {'1': 'THEORY', '2': 0},
+    {'1': 'LIVECODING', '2': 1},
+    {'1': 'SOFTSKILLS', '2': 2},
   ],
 };
 
@@ -74,7 +86,9 @@ const ChatBotRequest$json = {
 final $typed_data.Uint8List chatBotRequestDescriptor = $convert.base64Decode(
     'Cg5DaGF0Qm90UmVxdWVzdBIUCgV0b3BpYxgBIAEoCVIFdG9waWMSFAoFbW9kZWwYAiABKAlSBW'
     '1vZGVsEjsKCXF1ZXN0aW9ucxgDIAMoCzIdLmludGVydmlld19hdXRvbWF0b3IuUXVlc3Rpb25S'
-    'CXF1ZXN0aW9ucxIZCghpc19kZWJ1ZxgEIAEoCFIHaXNEZWJ1Zw==');
+    'CXF1ZXN0aW9ucxIZCghpc19kZWJ1ZxgEIAEoCFIHaXNEZWJ1ZxI/CgVzdGFnZRgFIAEoDjIpLm'
+    'ludGVydmlld19hdXRvbWF0b3IuQ2hhdEJvdFJlcXVlc3QuU3RhZ2VSBXN0YWdlIjMKBVN0YWdl'
+    'EgoKBlRIRU9SWRAAEg4KCkxJVkVDT0RJTkcQARIOCgpTT0ZUU0tJTExTEAI=');
 
 @$core.Deprecated('Use questionDescriptor instead')
 const Question$json = {

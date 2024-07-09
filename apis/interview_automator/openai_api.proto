@@ -24,10 +24,17 @@ message TranscribeResponse {
 }
 
 message ChatBotRequest {
+  enum Stage {
+    THEORY = 0;
+    LIVECODING = 1;
+    SOFTSKILLS = 2;
+  }
+
   string topic = 1;
   string model = 2;
   repeated Question questions = 3;
   bool is_debug = 4;
+  Stage stage = 5;
 }
 
 message Question {

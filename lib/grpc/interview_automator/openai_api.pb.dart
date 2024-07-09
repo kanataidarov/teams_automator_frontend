@@ -218,6 +218,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     $core.String? model,
     $core.Iterable<Question>? questions,
     $core.bool? isDebug,
+    ChatBotRequest_Stage? stage,
   }) {
     final $result = create();
     if (topic != null) {
@@ -232,6 +233,9 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     if (isDebug != null) {
       $result.isDebug = isDebug;
     }
+    if (stage != null) {
+      $result.stage = stage;
+    }
     return $result;
   }
   ChatBotRequest._() : super();
@@ -243,6 +247,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'model')
     ..pc<Question>(3, _omitFieldNames ? '' : 'questions', $pb.PbFieldType.PM, subBuilder: Question.create)
     ..aOB(4, _omitFieldNames ? '' : 'isDebug')
+    ..e<ChatBotRequest_Stage>(5, _omitFieldNames ? '' : 'stage', $pb.PbFieldType.OE, defaultOrMaker: ChatBotRequest_Stage.THEORY, valueOf: ChatBotRequest_Stage.valueOf, enumValues: ChatBotRequest_Stage.values)
     ..hasRequiredFields = false
   ;
 
@@ -296,6 +301,15 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   $core.bool hasIsDebug() => $_has(3);
   @$pb.TagNumber(4)
   void clearIsDebug() => clearField(4);
+
+  @$pb.TagNumber(5)
+  ChatBotRequest_Stage get stage => $_getN(4);
+  @$pb.TagNumber(5)
+  set stage(ChatBotRequest_Stage v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasStage() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStage() => clearField(5);
 }
 
 class Question extends $pb.GeneratedMessage {
