@@ -52,7 +52,7 @@ class _QaModalState extends State<QaModal> {
         qa.stage = Stage.theory;
         qa.anstype = Question_AnswerType.RAW.value;
         final res = (await DbHelper.instance.database).rawQuery(
-            'SELECT MAX(ord) as max_ord FROM ${Qa.tableName} WHERE stage = "${qa.stage}"');
+            'SELECT MAX(ord) as max_ord FROM ${Qa.tableName} WHERE stage = \'${qa.stage!.name}\'');
         // next order number for new record
         qa.ord = ((await res)[0]['max_ord'] as int) + 1;
         return [qa];
