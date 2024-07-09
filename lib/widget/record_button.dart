@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class RecordButton extends StatelessWidget {
   final bool isRecording;
-  final Function recordFunc;
+  final Function record;
 
   const RecordButton(
-      {super.key, required this.isRecording, required this.recordFunc});
+      {super.key, required this.isRecording, required this.record});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +17,10 @@ class RecordButton extends StatelessWidget {
       startDelay: const Duration(milliseconds: 1),
       child: GestureDetector(
         onLongPress: () async {
-          recordFunc(context);
+          record(context);
         },
         onLongPressUp: () async {
-          recordFunc(context);
+          record(context);
         },
         child: isRecording
             ? const Icon(Icons.radio_button_on, color: Colors.red, size: 230)

@@ -67,7 +67,7 @@ class ClientService {
     return transcription;
   }
 
-  Future<List<Answer>> chatBot(BuildContext ctx) async {
+  Future<List<Answer>> chatBot(BuildContext ctx, String stage) async {
     final topic = (await SettingsProvider.instance.byName('topic')).value!;
     final model = (await SettingsProvider.instance.byName('model')).value!;
     final transcription =
@@ -78,7 +78,7 @@ class ClientService {
     ChatBotRequest request = ChatBotRequest(
         topic: topic,
         model: model,
-        questions: await _questions(transcription),
+        questions: await _questions(stage, transcription),
         isDebug: debugEnabled);
     _logger.d('Sending request - $request');
 
@@ -96,9 +96,9 @@ class ClientService {
     return answers;
   }
 
-  Future<List<Question>> _questions(String transcription) async {
+  Future<List<Question>> _questions(String stage, String transcription) async {
     var db = await DbHelper.instance.database;
-    var qas = db.query(Qa.tableName);
+    var qas = db.query(Qa.tableName, where: 'stage = ?', whereArgs: [stage]);
 
     List<Question> questions = List.empty(growable: true);
     for (var qaMap in await qas) {

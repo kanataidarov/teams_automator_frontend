@@ -5,6 +5,7 @@ import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/files.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
+import 'package:interview_automator_frontend/widget/debug_button.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:logger/logger.dart' show Level, Logger;
@@ -13,7 +14,9 @@ import 'package:record/record.dart';
 Logger _logger = Logger(level: Level.debug);
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final String title;
+
+  const MyHomePage({super.key, required this.title});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -22,18 +25,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late final AudioRecorder recorder;
 
-  bool isRecording = false;
-  bool recorderReady = false;
+  bool _isRecording = false;
+  bool _recorderReady = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (!recorderReady) {
+    if (!_recorderReady) {
       recorder = AudioRecorder();
       _openTheRecorder().then((val) {
         setState(() {
-          recorderReady = val;
+          _recorderReady = val;
         });
       });
       _logger.d('Recorder (re)initialized');
@@ -58,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _startRecording() async {
-    if (!recorderReady) return;
+    if (!_recorderReady) return;
 
     String filePath = await _getRecordingPath();
 
@@ -87,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _stopRecording(BuildContext context) async {
-    if (!recorderReady) return;
+    if (!_recorderReady) return;
 
     try {
       recorder.stop().then((path) {
@@ -101,24 +104,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void record(BuildContext context) async {
-    if (!recorderReady) return;
+  void _record(BuildContext context) async {
+    if (!_recorderReady) return;
 
-    if (!isRecording) {
+    if (!_isRecording) {
       setState(() {
-        isRecording = true;
+        _isRecording = true;
       });
       await _startRecording();
     } else {
       await _stopRecording(context);
       setState(() {
-        isRecording = false;
+        _isRecording = false;
       });
     }
   }
 
   void handleClient(BuildContext context) async {
-    // TODO solve callback hell
     _getRecordingPath().then((path) {
       ClientService.instance.transcribe(path).then((transcription) {
         SettingsProvider.instance.byName('transcription').then((stng) async {
@@ -126,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
           await SettingsProvider.instance.update(stng);
         });
 
-        ClientService.instance.chatBot(context).then((answers) async {
+        ClientService.instance.chatBot(context, 'theory').then((answers) async {
           for (var answer in answers) {
             var qas = (await DbHelper.instance.database)
                 .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
@@ -139,35 +141,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _debugButton(BuildContext context) => FutureBuilder<bool>(
-      future: isDebugEnabled(),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        Widget cnt = Container();
-        if (snapshot.hasData) {
-          bool isDebug = snapshot.data!;
-          if (isDebug) {
-            cnt = FloatingActionButton(
-                onPressed: () => handleClient(context),
-                tooltip: 'Debug',
-                child: const Icon(Icons.telegram_outlined));
-          }
-        }
-        return cnt;
-      });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Interview Automator')),
+        appBar: AppBar(title: Text(widget.title)),
         drawer: const DrawerWidget(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RecordButton(isRecording: isRecording, recordFunc: record)
+              RecordButton(isRecording: _isRecording, record: _record)
             ],
           ),
         ),
-        floatingActionButton: _debugButton(context));
+        floatingActionButton: DebugButton(context,
+            isDebugEnabled: isDebugEnabled, handle: handleClient));
   }
 }

@@ -19,15 +19,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const title = 'Interview Automator';
+
     return MaterialApp(
-      title: 'Interview Automator',
+      title: title,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => const MyHomePage(),
+        '/': (ctx) => const MyHomePage(title: title),
         '/settings': (ctx) => const SettingsPage(),
         '/qa': (ctx) => const QaList()
       },
