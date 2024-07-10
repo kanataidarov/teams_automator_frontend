@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/style.dart';
 
@@ -28,26 +29,23 @@ class _SettingModalState extends State<SettingModal> {
 
   @override
   Widget build(BuildContext ctx) {
-    tfControl.text = widget.setting.value!;
+    final setting = widget.setting;
+    tfControl.text = setting.value!;
 
     return AlertDialog(
-      title: Text(widget.setting.title!),
+      title: Text(setting.title!),
       content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              widget.setting.description!,
+              setting.description!,
               style: ModalsStyle.descriptionStyle,
             ),
             const SizedBox(
               height: 9,
             ),
             Expanded(
-                child: TextField(
-                    controller: tfControl,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    expands: true))
+                child: InputField(tfControl: tfControl, type: setting.type!))
           ]),
       actions: [
         TextButton(
@@ -62,5 +60,36 @@ class _SettingModalState extends State<SettingModal> {
             child: const Text('Save'))
       ],
     );
+  }
+}
+
+class InputField extends StatelessWidget {
+  final TextEditingController tfControl;
+  final String type;
+
+  const InputField({super.key, required this.tfControl, required this.type});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (type) {
+      case 'integer':
+        return TextField(
+          controller: tfControl,
+          keyboardType: TextInputType.number,
+          maxLines: 1,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        );
+      case 'string':
+        return TextField(
+            controller: tfControl,
+            keyboardType: TextInputType.text,
+            maxLines: 1);
+      default:
+        return TextField(
+            controller: tfControl,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            expands: true);
+    }
   }
 }

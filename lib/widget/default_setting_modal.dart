@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/style.dart';
@@ -50,7 +49,7 @@ class _DefaultSettingModalState extends State<DefaultSettingModal> {
             const SizedBox(
               width: 18,
             ),
-            CupertinoSwitch(
+            Switch(
                 value: defaultVoicePath,
                 onChanged: (value) {
                   setState(() {

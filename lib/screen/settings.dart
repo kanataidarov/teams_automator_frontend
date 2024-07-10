@@ -79,7 +79,13 @@ class _SettingsPageState extends State<SettingsPage> {
       if (!tilesMap.containsKey(stng.section!)) {
         tilesMap[stng.section!] = List.empty(growable: true);
       }
-      tilesMap[stng.section!]!.add(_buildModal(stng));
+      switch (stng.type) {
+        case 'bool':
+          tilesMap[stng.section!]!.add(_buildSwitch(stng));
+          break;
+        default:
+          tilesMap[stng.section!]!.add(_buildModal(stng));
+      }
     }
 
     List<SettingsSection> sections = List.empty(growable: true);
@@ -98,20 +104,9 @@ class _SettingsPageState extends State<SettingsPage> {
           showDialog<String>(
               context: context,
               builder: (_) => _buildModalInt(setting)).then((newVal) {
-            if (newVal != null) {
+            if (null != newVal) {
               setting.value = newVal;
-              SettingsProvider.instance.update(setting).then((_) async {
-                if ('Backend service' == setting.section) {
-                  ClientService.instance
-                      .setClient(await ClientService.instance.initGrpcClient());
-                } else if ('init_file_path' == setting.name) {
-                  _needRefreshSettings.value = !_needRefreshSettings.value;
-                  _logger.i(
-                      'Settings restored to defaults from `${setting.value}`');
-                } else if ('debug_enabled' == setting.name) {
-                  _needRefreshSettings.value = !_needRefreshSettings.value;
-                }
-              });
+              _update(setting);
             }
           });
         });
@@ -122,17 +117,36 @@ class _SettingsPageState extends State<SettingsPage> {
       return ReinitModal(setting: setting);
     }
     switch (setting.type) {
-      case 'text':
-        return SettingModal(setting: setting);
-      case 'integer':
-        return SettingModal(setting: setting);
-      case 'bool':
-        return SettingModal(setting: setting);
       case 'default_text':
         return DefaultSettingModal(setting: setting);
       default:
         return SettingModal(setting: setting);
     }
+  }
+
+  SettingsTile _buildSwitch(Setting setting) {
+    return SettingsTile.switchTile(
+        initialValue: 'TRUE' == setting.value!.toUpperCase(),
+        onToggle: (newVal) {
+          setting.value = newVal ? 'true' : 'false';
+          _update(setting);
+        },
+        title: Text(setting.title!),
+        leading: const Icon(Icons.repeat_outlined));
+  }
+
+  void _update(Setting setting) {
+    SettingsProvider.instance.update(setting).then((_) async {
+      if ('Backend service' == setting.section) {
+        ClientService.instance
+            .setClient(await ClientService.instance.initGrpcClient());
+      } else if ('init_file_path' == setting.name) {
+        _needRefreshSettings.value = !_needRefreshSettings.value;
+        _logger.i('Settings restored to defaults from `${setting.value}`');
+      } else if ('debug_enabled' == setting.name) {
+        _needRefreshSettings.value = !_needRefreshSettings.value;
+      }
+    });
   }
 }
 
