@@ -24,17 +24,10 @@ message TranscribeResponse {
 }
 
 message ChatBotRequest {
-  enum Stage {
-    THEORY = 0;
-    LIVECODING = 1;
-    SOFTSKILLS = 2;
-  }
-
   string topic = 1;
   string model = 2;
   repeated Question questions = 3;
   bool is_debug = 4;
-  Stage stage = 5;
 }
 
 message Question {
@@ -44,9 +37,23 @@ message Question {
     SNIPPET = 2;
   }
 
+  enum Intent {
+    CLARIFY = 0;
+    SOLVE = 1;
+    CORRECT = 2;
+  }
+
+  enum Stage {
+    THEORY = 0;
+    LIVECODING = 1;
+    SOFTSKILLS = 2;
+  }
+
   int32 qid = 1;
   string content = 2;
   AnswerType ans_type = 3;
+  Intent intent = 4;
+  Stage stage = 5;
 }
 
 message ChatBotResponse {

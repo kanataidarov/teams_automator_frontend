@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
+import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbenum.dart';
 import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
@@ -23,18 +25,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-enum SubStage { clarify, solve, correct }
-
 class _MyHomePageState extends State<MyHomePage> {
   late final AudioRecorder _recorder;
 
-  Stage _selectedStage = Stage.theory;
   bool _isRecording = false;
   bool _recorderReady = false;
-  final Map<SubStage, bool> _subStages = {
-    SubStage.clarify: false,
-    SubStage.solve: true,
-    SubStage.correct: false
+  Question_Stage _selectedStage = Question_Stage.THEORY;
+  final Map<Question_Intent, bool> _subStages = {
+    Question_Intent.CLARIFY: false,
+    Question_Intent.SOLVE: true,
+    Question_Intent.CORRECT: false
   };
 
   @override
@@ -166,16 +166,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     DropdownButtonFormField(
                         decoration: const InputDecoration(
                             labelText: 'Stage', border: OutlineInputBorder()),
-                        items: Stage.values.map((Stage item) {
+                        items: Question_Stage.values.map((Question_Stage item) {
                           return DropdownMenuItem(
                               value: item,
                               child: Row(children: [
                                 const Icon(Icons.question_answer_outlined),
                                 const SizedBox(width: 9),
-                                Text(toBeginningOfSentenceCase(item.name))
+                                Text(toBeginningOfSentenceCase(
+                                    item.name.toLowerCase()))
                               ]));
                         }).toList(),
-                        onChanged: (Stage? selectedItem) {
+                        onChanged: (Question_Stage? selectedItem) {
                           setState(() {
                             _selectedStage = selectedItem!;
                           });
@@ -186,11 +187,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       return ToggleButtons(
                         direction: Axis.horizontal,
                         onPressed: (int selectedIndex) {
-                          SubStage ssKey =
+                          Question_Intent intent =
                               _subStages.keys.toList()[selectedIndex];
                           setState(() {
-                            _subStages
-                                .updateAll((k, v) => ssKey == k ? true : false);
+                            _subStages.updateAll(
+                                (k, v) => intent == k ? true : false);
                           });
                         },
                         borderRadius:
@@ -201,7 +202,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         isSelected: List.of(_subStages.values),
                         children: _subStages.keys
-                            .map((SubStage key) => Text(key.name))
+                            .map((Question_Intent key) => Text(
+                                toBeginningOfSentenceCase(
+                                    key.name.toLowerCase())))
                             .toList(),
                       );
                     }),

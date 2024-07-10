@@ -3,7 +3,6 @@ import 'package:interview_automator_frontend/grpc/interview_automator/openai_api
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/widget/error_page.dart';
-import 'package:interview_automator_frontend/widget/style.dart';
 import 'package:interview_automator_frontend/widget/waiting_page.dart';
 import 'package:intl/intl.dart';
 
@@ -17,33 +16,34 @@ class QaModal extends StatefulWidget {
 }
 
 class _QaModalState extends State<QaModal> {
-  late TextEditingController _questionControl;
-  late TextEditingController _qparamControl;
   late TextEditingController _answerControl;
+  late TextEditingController _dialogueControl;
+  late TextEditingController _questionControl;
   late Question_AnswerType _selectedAnstype;
-  late Stage _selectedStage;
+  late Question_Intent _selectedIntent;
+  late Question_Stage _selectedStage;
   late int _ord;
 
   @override
   void initState() {
     _questionControl = TextEditingController();
-    _qparamControl = TextEditingController();
+    _dialogueControl = TextEditingController();
     _answerControl = TextEditingController();
 
     final qa = widget.qa;
-    _selectedAnstype = null == qa.anstype
-        ? Question_AnswerType.RAW
-        : Question_AnswerType.values[qa.anstype!];
-    _selectedStage = null == qa.stage ? Stage.theory : qa.stage!;
+    _selectedAnstype =
+        null == qa.anstype ? Question_AnswerType.RAW : qa.anstype!;
+    _selectedIntent = null == qa.qintent ? Question_Intent.SOLVE : qa.qintent!;
+    _selectedStage = null == qa.stage ? Question_Stage.THEORY : qa.stage!;
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _questionControl.dispose();
-    _qparamControl.dispose();
     _answerControl.dispose();
+    _dialogueControl.dispose();
+    _questionControl.dispose();
     super.dispose();
   }
 
@@ -51,11 +51,11 @@ class _QaModalState extends State<QaModal> {
   Widget build(BuildContext ctx) {
     final qa = widget.qa;
 
+    _answerControl.text = (qa.answer?.isEmpty ?? true) ? ' ' : qa.answer!;
+    _dialogueControl.text = (qa.dialogue?.isEmpty ?? true) ? ' ' : qa.dialogue!;
     _questionControl.text = qa.question!;
-    _qparamControl.text = (qa.qparam?.isEmpty ?? true) ? '' : qa.qparam!;
-    _answerControl.text = (qa.answer?.isEmpty ?? true) ? '' : qa.answer!;
 
-    Future<List<Qa>> fetchQa(Stage stage) async {
+    Future<List<Qa>> fetchQa(Question_Stage stage) async {
       if (qa.title?.isEmpty ?? true) {
         final res = (await DbHelper.instance.database).rawQuery(
             'SELECT MAX(ord) as max_ord FROM ${Qa.tableName} WHERE stage = \'${stage.name}\'');
@@ -66,20 +66,33 @@ class _QaModalState extends State<QaModal> {
       return [qa];
     }
 
-    buildInt() => <Widget>[
+    buildInt() => Column(children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: _questionControl,
+              decoration: const InputDecoration(
+                  labelText: 'Question', border: OutlineInputBorder()),
+              expands: true,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+            ),
+          ),
+          const SizedBox(
+            height: 9,
+          ),
           DropdownButtonFormField(
               decoration: const InputDecoration(
                   labelText: 'Stage', border: OutlineInputBorder()),
-              items: Stage.values.map((Stage item) {
+              items: Question_Stage.values.map((Question_Stage item) {
                 return DropdownMenuItem(
                     value: item,
                     child: Row(children: [
                       const Icon(Icons.question_answer_outlined),
                       const SizedBox(width: 9),
-                      Text(toBeginningOfSentenceCase(item.name))
+                      Text(toBeginningOfSentenceCase(item.name.toLowerCase()))
                     ]));
               }).toList(),
-              onChanged: (Stage? selectedStage) {
+              onChanged: (Question_Stage? selectedStage) {
                 fetchQa(selectedStage!).then((_) {
                   setState(() {
                     _selectedStage = selectedStage;
@@ -87,35 +100,6 @@ class _QaModalState extends State<QaModal> {
                 });
               },
               value: _selectedStage),
-          const SizedBox(
-            height: 9,
-          ),
-          Expanded(
-            child: TextField(
-              controller: _questionControl,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              expands: true,
-            ),
-          ),
-          const SizedBox(
-            height: 9,
-          ),
-          const Text(
-            'Question params',
-            style: ModalsStyle.descriptionStyle,
-          ),
-          const SizedBox(
-            height: 9,
-          ),
-          Expanded(
-            child: TextField(
-              controller: _qparamControl,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              expands: true,
-            ),
-          ),
           const SizedBox(
             height: 9,
           ),
@@ -128,7 +112,7 @@ class _QaModalState extends State<QaModal> {
                     child: Row(children: [
                       const Icon(Icons.question_answer_outlined),
                       const SizedBox(width: 9),
-                      Text(toBeginningOfSentenceCase(item.name))
+                      Text(toBeginningOfSentenceCase(item.name.toLowerCase()))
                     ]));
               }).toList(),
               onChanged: (Question_AnswerType? selectedItem) {
@@ -140,15 +124,44 @@ class _QaModalState extends State<QaModal> {
           const SizedBox(
             height: 9,
           ),
-          Expanded(
-            child: TextField(
-              controller: _answerControl,
-              expands: true,
-              maxLines: null,
-              readOnly: true,
-            ),
-          )
-        ];
+          DropdownButtonFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Intent', border: OutlineInputBorder()),
+              items: Question_Intent.values.map((Question_Intent item) {
+                return DropdownMenuItem(
+                    value: item,
+                    child: Row(children: [
+                      const Icon(Icons.question_answer_outlined),
+                      const SizedBox(width: 9),
+                      Text(toBeginningOfSentenceCase(item.name.toLowerCase()))
+                    ]));
+              }).toList(),
+              onChanged: (Question_Intent? selectedItem) {
+                setState(() {
+                  _selectedIntent = selectedItem!;
+                });
+              },
+              value: _selectedIntent),
+          const SizedBox(
+            height: 9,
+          ),
+          TextField(
+            decoration: const InputDecoration(
+                labelText: 'Last answer', border: OutlineInputBorder()),
+            controller: _answerControl,
+            maxLines: 1,
+            readOnly: true,
+          ),
+          const SizedBox(
+            height: 9,
+          ),
+          TextField(
+              decoration: const InputDecoration(
+                  labelText: 'Full dialogue', border: OutlineInputBorder()),
+              controller: _dialogueControl,
+              maxLines: 1,
+              readOnly: true),
+        ]);
 
     return AlertDialog(
       title: Text(null == qa.title ? 'New Q&A' : qa.title!),
@@ -157,7 +170,7 @@ class _QaModalState extends State<QaModal> {
           builder: (BuildContext ctx, AsyncSnapshot<List<Qa>> snapshot) {
             Widget child;
             if (snapshot.hasData) {
-              child = Column(children: buildInt());
+              child = buildInt();
             } else if (snapshot.hasError) {
               child = ErrorPage(snapshot: snapshot);
             } else {
@@ -178,10 +191,10 @@ class _QaModalState extends State<QaModal> {
                 qa.title =
                     'Q&A ${toBeginningOfSentenceCase(_selectedStage.name)} $_ord';
               }
-              qa.question = _questionControl.text;
-              qa.qparam = _qparamControl.text;
-              qa.anstype = _selectedAnstype.value;
+              qa.anstype = _selectedAnstype;
+              qa.qintent = _selectedIntent;
               qa.stage = _selectedStage;
+              qa.question = _questionControl.text;
               Navigator.pop(ctx, qa);
             },
             child: const Text('Save'))

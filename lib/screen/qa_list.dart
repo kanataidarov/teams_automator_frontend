@@ -1,3 +1,4 @@
+import '../grpc/interview_automator/openai_api.pbenum.dart';
 import '../widget/error_page.dart';
 import '../widget/waiting_page.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,7 @@ class _QaListState extends State<QaList> {
     return Scaffold(
       appBar: AppBar(title: const Text('Questions & Answers')),
       drawer: const DrawerWidget(),
-      body: SafeArea(
-        child: _qaList(context),
-      ),
+      body: _qaList(context),
       floatingActionButton: FloatingActionButton(
           onPressed: _addQa, tooltip: 'New Q&A', child: const Icon(Icons.add)),
     );
@@ -49,20 +48,18 @@ class _QaListState extends State<QaList> {
   }
 
   Future<List<Qa>> _fetchQas() async {
-    final recs = (await DbHelper.instance.database).query('qa');
+    final recs = await (await DbHelper.instance.database).query('qa');
 
     final List<Qa> qas = List.empty(growable: true);
-    for (var stngRec in await recs) {
-      var stng = Qa.fromMap(stngRec);
-
-      qas.add(stng);
+    for (var stng in recs) {
+      qas.add(Qa.fromMap(stng));
     }
 
     return qas;
   }
 
   List<SettingsSection> _sections(List<Qa> qas) {
-    Map<Stage, List<SettingsTile>> tilesMap = {};
+    Map<Question_Stage, List<SettingsTile>> tilesMap = {};
     for (var qa in qas) {
       if (!tilesMap.containsKey(qa.stage!)) {
         tilesMap[qa.stage!] = List.empty(growable: true);
@@ -105,8 +102,9 @@ class _QaListState extends State<QaList> {
         }).then((newQa) {
       if (null != newQa) {
         QaProvider.instance.insert(newQa).then((id) {
-          newQa.id = id;
-          setState(() {});
+          setState(() {
+            newQa.id = id;
+          });
         });
       }
     });

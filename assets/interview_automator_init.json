@@ -88,50 +88,99 @@
       "title": "Q&A Theory 1",
       "ord": 1,
       "question": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nExtract all questions asked by interviewer.",
-      "qparam": "",
+      "qintent": "CLARIFY",
+      "dialogue": "",
       "answer": "",
-      "anstype": 0,
-      "stage": "theory"
+      "anstype": "RAW",
+      "stage": "THEORY"
     },
     {
       "id": 2,
       "title": "Q&A Theory 2",
       "ord": 2,
       "question": "Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
-      "qparam": "",
+      "qintent": "SOLVE",
+      "dialogue": "",
       "answer": "",
-      "anstype": 1,
-      "stage": "theory"
+      "anstype": "RAW",
+      "stage": "THEORY"
     },
     {
       "id": 3,
-      "title": "Q&A Livecoding 1",
-      "ord": 1,
-      "question": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nIn given interview part interviewer describes coding assignment for interviewee (in Russian). You have to implement Java program based on interviewee's description of the program.",
-      "qparam": "",
+      "title": "Q&A Theory 3",
+      "ord": 3,
+      "question": "Answer to all questions just extracted by you from given transcription part. Generate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "qintent": "CORRECT",
+      "dialogue": "",
       "answer": "",
-      "anstype": 2,
-      "stage": "livecoding"
+      "anstype": "RAW",
+      "stage": "THEORY"
     },
     {
       "id": 4,
-      "title": "Q&A Livecoding 2",
-      "ord": 2,
-      "question": "Rewrite the program you just generated, taking into account the comments given by the interviewer. These are the interviewer's comments: \n{transcription}",
-      "qparam": "",
+      "title": "Q&A Livecoding 1",
+      "ord": 1,
+      "question": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nIn given interview part interviewer describes coding assignment for interviewee (in Russian). You have to implement Java program based on interviewee's description of the program.",
+      "qintent": "CLARIFY",
+      "dialogue": "",
       "answer": "",
-      "anstype": 2,
-      "stage": "livecoding"
+      "anstype": "SNIPPET",
+      "stage": "LIVECODING"
     },
     {
       "id": 5,
+      "title": "Q&A Livecoding 2",
+      "ord": 2,
+      "question": "Rewrite the program you just generated, taking into account the comments given by the interviewer. These are the interviewer's comments: \n{transcription}",
+      "qintent": "SOLVE",
+      "dialogue": "",
+      "answer": "",
+      "anstype": "SNIPPET",
+      "stage": "LIVECODING"
+    },
+    {
+      "id": 6,
+      "title": "Q&A Livecoding 3",
+      "ord": 3,
+      "question": "Rewrite the program you just generated, taking into account the comments given by the interviewer. These are the interviewer's comments: \n{transcription}",
+      "qintent": "CORRECT",
+      "dialogue": "",
+      "answer": "",
+      "anstype": "SNIPPET",
+      "stage": "LIVECODING"
+    },
+    {
+      "id": 7,
       "title": "Q&A Softskills 1",
       "ord": 1,
       "question": "You have given part of interview session. The interviewer, an employee of the HR department, asks questions on softskills. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nExtract all questions asked by interviewer and generate answers for them. \nGenerate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
-      "qparam": "",
+      "qintent": "CLARIFY",
+      "dialogue": "",
       "answer": "",
-      "anstype": 0,
-      "stage": "softskills"
+      "anstype": "RAW",
+      "stage": "SOFTSKILLS"
+    },
+    {
+      "id": 8,
+      "title": "Q&A Softskills 2",
+      "ord": 2,
+      "question": "You have given part of interview session. The interviewer, an employee of the HR department, asks questions on softskills. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nExtract all questions asked by interviewer and generate answers for them. \nGenerate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "qintent": "SOLVE",
+      "dialogue": "",
+      "answer": "",
+      "anstype": "RAW",
+      "stage": "SOFTSKILLS"
+    },
+    {
+      "id": 9,
+      "title": "Q&A Softskills 3",
+      "ord": 3,
+      "question": "You have given part of interview session. The interviewer, an employee of the HR department, asks questions on softskills. Interview was in Russian. \nHere is text transcription of given interview part: \n{transcription} \nExtract all questions asked by interviewer and generate answers for them. \nGenerate JSON containing questions and answers. Your answer should contain generated JSON only, nothing else. \nJSON structure should be following: { \"interview_session\": [ \"question\": \"\", \"answer\": \"\", ... ] }",
+      "qintent": "CORRECT",
+      "dialogue": "",
+      "answer": "",
+      "anstype": "RAW",
+      "stage": "SOFTSKILLS"
     }
   ]
 }

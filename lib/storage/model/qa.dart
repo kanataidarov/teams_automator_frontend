@@ -1,3 +1,5 @@
+import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
+import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbenum.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/model/parent.dart';
 import 'package:logger/logger.dart' show Level, Logger;
@@ -12,26 +14,29 @@ class Qa extends DbModel {
         title VARCHAR(55) NOT NULL,
         ord INTEGER NOT NULL,
         question TEXT NOT NULL,
-        qparam TEXT,
+        qintent VARCHAR(20) NOT NULL,
+        dialogue TEXT,
         answer TEXT,
-        anstype INTEGER NOT NULL,
+        anstype VARCHAR(20) NOT NULL,
         stage VARCHAR(20) NOT NULL
       );''';
 
   String? title;
   int? ord;
   String? question;
-  String? qparam;
+  Question_Intent? qintent;
+  String? dialogue;
   String? answer;
-  int? anstype;
-  Stage? stage;
+  Question_AnswerType? anstype;
+  Question_Stage? stage;
 
   Qa(
       {super.id,
       this.title,
       this.ord,
       this.question,
-      this.qparam,
+      this.qintent,
+      this.dialogue,
       this.answer,
       this.anstype,
       this.stage});
@@ -43,10 +48,11 @@ class Qa extends DbModel {
       'title': title,
       'ord': ord,
       'question': question,
-      'qparam': qparam,
+      'qintent': qintent!.name.toUpperCase(),
+      'dialogue': dialogue,
       'answer': answer,
-      'anstype': anstype,
-      'stage': stage!.name
+      'anstype': anstype!.name.toUpperCase(),
+      'stage': stage!.name..toUpperCase()
     };
   }
 
@@ -54,17 +60,19 @@ class Qa extends DbModel {
     title = map['title'];
     ord = map['ord'];
     question = map['question'];
-    qparam = map['qparam'];
+    qintent = Question_Intent.values
+        .firstWhere((e) => e.name.toUpperCase() == map['qintent']);
+    dialogue = map['dialogue'];
     answer = map['answer'];
-    anstype = map['anstype'];
-    stage = Stage.values.byName(map['stage']);
+    anstype = Question_AnswerType.values
+        .firstWhere((e) => e.name.toUpperCase() == map['anstype']);
+    stage = Question_Stage.values
+        .firstWhere((e) => e.name.toUpperCase() == map['stage']);
   }
 
   @override
   String toString() => '${Qa.tableName}(Id=$id,title=`$title`,order=$ord)';
 }
-
-enum Stage { theory, livecoding, softskills }
 
 class QaProvider {
   final _dbHelper = DbHelper.instance;
@@ -99,7 +107,7 @@ class QaProvider {
     final db = await _dbHelper.database;
     await db.execute('''DROP TABLE IF EXISTS ${Qa.tableName};''');
     db.execute(Qa.createScript).then((_) {
-      _logger.d('Table ${Qa.tableName} (re)created');
+      _logger.d('Table `${Qa.tableName}` (re)created');
     });
 
     db.delete(Qa.tableName);
@@ -112,5 +120,3 @@ class QaProvider {
     _logger.d('`${Qa.tableName}` table initialization completed');
   }
 }
-
-enum SubStage { clarify, solve, correct }

@@ -28,9 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
         appBar: AppBar(title: const Text('Settings')),
         drawer: const DrawerWidget(),
-        body: SafeArea(
-          child: _settings(context),
-        ));
+        body: _settings(context));
   }
 
   Widget _settings(BuildContext context) {
