@@ -23,12 +23,19 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+enum SubStage { clarify, solve, correct }
+
 class _MyHomePageState extends State<MyHomePage> {
   late final AudioRecorder _recorder;
 
   Stage _selectedStage = Stage.theory;
   bool _isRecording = false;
   bool _recorderReady = false;
+  final Map<SubStage, bool> _subStages = {
+    SubStage.clarify: false,
+    SubStage.solve: true,
+    SubStage.correct: false
+  };
 
   @override
   void initState() {
@@ -154,31 +161,55 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(18),
             child: Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                          labelText: 'Stage', border: OutlineInputBorder()),
-                      items: Stage.values.map((Stage item) {
-                        return DropdownMenuItem(
-                            value: item,
-                            child: Row(children: [
-                              const Icon(Icons.question_answer_outlined),
-                              const SizedBox(width: 9),
-                              Text(toBeginningOfSentenceCase(item.name))
-                            ]));
-                      }).toList(),
-                      onChanged: (Stage? selectedItem) {
-                        setState(() {
-                          _selectedStage = selectedItem!;
-                        });
-                      },
-                      value: _selectedStage),
-                  Expanded(
-                      child: RecordButton(
-                          isRecording: _isRecording, record: _record))
-                ],
-              ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    DropdownButtonFormField(
+                        decoration: const InputDecoration(
+                            labelText: 'Stage', border: OutlineInputBorder()),
+                        items: Stage.values.map((Stage item) {
+                          return DropdownMenuItem(
+                              value: item,
+                              child: Row(children: [
+                                const Icon(Icons.question_answer_outlined),
+                                const SizedBox(width: 9),
+                                Text(toBeginningOfSentenceCase(item.name))
+                              ]));
+                        }).toList(),
+                        onChanged: (Stage? selectedItem) {
+                          setState(() {
+                            _selectedStage = selectedItem!;
+                          });
+                        },
+                        value: _selectedStage),
+                    const SizedBox(height: 27),
+                    LayoutBuilder(builder: (context, limits) {
+                      return ToggleButtons(
+                        direction: Axis.horizontal,
+                        onPressed: (int selectedIndex) {
+                          SubStage ssKey =
+                              _subStages.keys.toList()[selectedIndex];
+                          setState(() {
+                            _subStages
+                                .updateAll((k, v) => ssKey == k ? true : false);
+                          });
+                        },
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        constraints: BoxConstraints(
+                          minHeight: 50,
+                          minWidth: limits.maxWidth / 3.1,
+                        ),
+                        isSelected: List.of(_subStages.values),
+                        children: _subStages.keys
+                            .map((SubStage key) => Text(key.name))
+                            .toList(),
+                      );
+                    }),
+                    const SizedBox(height: 9),
+                    Expanded(
+                        child: RecordButton(
+                            isRecording: _isRecording, record: _record))
+                  ]),
             )),
         floatingActionButton: DebugButton(context,
             isDebugEnabled: isDebugEnabled, handle: handleClient));

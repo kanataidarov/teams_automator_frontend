@@ -112,3 +112,5 @@ class QaProvider {
     _logger.d('`${Qa.tableName}` table initialization completed');
   }
 }
+
+enum SubStage { clarify, solve, correct }
