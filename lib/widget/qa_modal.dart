@@ -68,37 +68,40 @@ class _QaModalState extends State<QaModal> {
     }
 
     Widget openOnDoubleTap(
-        BuildContext context, final String label, bool isEditable) {
-      return GestureDetector(
-          child: isEditable
-              ? TextField(
-                  controller: _controllers[label],
-                  decoration: InputDecoration(
-                      labelText: label, border: const OutlineInputBorder()),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 9,
-                  readOnly: true,
-                )
-              : TextField(
-                  decoration: InputDecoration(
-                      labelText: label, border: const OutlineInputBorder()),
-                  controller: _controllers[label],
-                  maxLines: 1,
-                  readOnly: true),
-          onDoubleTap: () {
-            showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => TfModal(
-                    _controllers[label]!.text, label,
-                    readOnly: !isEditable)).then(
-              (question) {
-                if (null != question) {
-                  _controllers[label]!.text = question;
-                }
-              },
-            );
-          });
-    }
+            BuildContext context, final String label, bool isEditable) =>
+        GestureDetector(
+            child: isEditable
+                ? TextField(
+                    controller: _controllers[label],
+                    decoration: InputDecoration(
+                        labelText: label, border: const OutlineInputBorder()),
+                    enabled:
+                        !(_controllers[label]?.text.trim().isEmpty ?? true),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 9,
+                    readOnly: true,
+                  )
+                : TextField(
+                    decoration: InputDecoration(
+                        labelText: label, border: const OutlineInputBorder()),
+                    enabled:
+                        !(_controllers[label]?.text.trim().isEmpty ?? true),
+                    controller: _controllers[label],
+                    maxLines: 1,
+                    readOnly: true),
+            onDoubleTap: () {
+              showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => TfModal(
+                      _controllers[label]!.text, label,
+                      readOnly: !isEditable)).then(
+                (question) {
+                  if (null != question) {
+                    _controllers[label]!.text = question;
+                  }
+                },
+              );
+            });
 
     buildInt() => Column(children: <Widget>[
           openOnDoubleTap(context, 'Question', true),
