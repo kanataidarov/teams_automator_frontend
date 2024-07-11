@@ -4,6 +4,8 @@ import 'package:interview_automator_frontend/screen/qa_list.dart';
 import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/files.dart';
+import 'package:interview_automator_frontend/storage/memory.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +13,9 @@ void main() {
   DbHelper.instance.checkIfInit();
   Files.instance.init();
 
-  runApp(const MyApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => Memory())],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,3 +1,4 @@
+import '../storage/memory.dart';
 import '../widget/vgap.dart';
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
@@ -12,6 +13,7 @@ import 'package:interview_automator_frontend/widget/drawer.dart';
 import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' show Level, Logger;
+import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
 Logger _logger = Logger(level: Level.debug);
@@ -27,10 +29,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final AudioRecorder _recorder;
+  late Question_Stage _selectedStage;
 
   bool _isRecording = false;
   bool _recorderReady = false;
-  Question_Stage _selectedStage = Question_Stage.THEORY;
   final Map<Question_Intent, bool> _subStages = {
     Question_Intent.CLARIFY: false,
     Question_Intent.SOLVE: true,
@@ -40,6 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    _selectedStage = context.read<Memory>().lastStage;
 
     if (!_recorderReady) {
       _recorder = AudioRecorder();
@@ -173,8 +177,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               ]));
                         }).toList(),
                         onChanged: (Question_Stage? selectedItem) {
+                          context.read<Memory>().setStage(selectedItem!);
                           setState(() {
-                            _selectedStage = selectedItem!;
+                            _selectedStage = selectedItem;
                           });
                         },
                         value: _selectedStage),
