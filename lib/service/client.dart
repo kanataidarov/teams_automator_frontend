@@ -124,16 +124,33 @@ class ClientService {
   }
 
   String _embedTexts(Qa qa, Qa solveQa, String transcription) {
-    switch (qa.qintent) {
-      case Question_Intent.CLARIFY:
-      case Question_Intent.CORRECT:
-        return qa.question!.format({
-          'transcription': transcription,
-          'dialogue': solveQa.dialogue,
-          'questions': solveQa.extracted
-        });
-      case Question_Intent.SOLVE:
-        return qa.question!.format({'transcription': transcription});
+    switch (qa.stage) {
+      case Question_Stage.THEORY:
+      case Question_Stage.SOFTSKILLS:
+        switch (qa.qintent) {
+          case Question_Intent.CLARIFY:
+          case Question_Intent.CORRECT:
+            return qa.question!.format({
+              'transcription': transcription,
+              'dialogue': solveQa.dialogue,
+              'questions': solveQa.extracted
+            });
+          case Question_Intent.SOLVE:
+            return qa.question!.format({'transcription': transcription});
+          default:
+            return qa.question!;
+        }
+      case Question_Stage.LIVECODING:
+        switch (qa.qintent) {
+          case Question_Intent.CLARIFY:
+          case Question_Intent.CORRECT:
+            return qa.question!.format(
+                {'transcription': transcription, 'dialogue': solveQa.dialogue});
+          case Question_Intent.SOLVE:
+            return qa.question!.format({'transcription': transcription});
+          default:
+            return qa.question!;
+        }
       default:
         return qa.question!;
     }
