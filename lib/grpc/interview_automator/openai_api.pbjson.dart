@@ -149,10 +149,12 @@ const Answer$json = {
   '2': [
     {'1': 'qid', '3': 1, '4': 1, '5': 5, '10': 'qid'},
     {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+    {'1': 'extracted', '3': 3, '4': 1, '5': 9, '10': 'extracted'},
   ],
 };
 
 /// Descriptor for `Answer`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List answerDescriptor = $convert.base64Decode(
-    'CgZBbnN3ZXISEAoDcWlkGAEgASgFUgNxaWQSGAoHY29udGVudBgCIAEoCVIHY29udGVudA==');
+    'CgZBbnN3ZXISEAoDcWlkGAEgASgFUgNxaWQSGAoHY29udGVudBgCIAEoCVIHY29udGVudBIcCg'
+    'lleHRyYWN0ZWQYAyABKAlSCWV4dHJhY3RlZA==');
 

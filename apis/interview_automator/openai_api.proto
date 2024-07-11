@@ -63,4 +63,5 @@ message ChatBotResponse {
 message Answer {
   int32 qid = 1;
   string content = 2;
+  string extracted = 3;
 }

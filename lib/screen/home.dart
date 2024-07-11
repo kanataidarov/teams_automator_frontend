@@ -1,3 +1,4 @@
+import '../widget/vgap.dart';
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
 import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbenum.dart';
@@ -5,7 +6,6 @@ import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/storage/files.dart';
-import 'package:interview_automator_frontend/storage/model/qa.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/debug_button.dart';
 import 'package:interview_automator_frontend/widget/drawer.dart';
@@ -13,8 +13,6 @@ import 'package:interview_automator_frontend/widget/record_button.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:record/record.dart';
-
-import '../widget/vgap.dart';
 
 Logger _logger = Logger(level: Level.debug);
 
@@ -131,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void handleClient(BuildContext context) async {
+  void handleClient(BuildContext ctx) async {
     _getRecordingPath().then((path) {
       ClientService.instance.transcribe(path).then((transcription) {
         SettingsProvider.instance.byName('transcription').then((stng) async {
@@ -139,17 +137,13 @@ class _MyHomePageState extends State<MyHomePage> {
           await SettingsProvider.instance.update(stng);
         });
 
+        final selectedIntent =
+            _subStages.keys.firstWhere((k) => _subStages[k]!);
+
+        _logger.d(
+            'Calling ClientService.handleChatBot with parameters: ${_selectedStage.name}, ${selectedIntent.name}');
         ClientService.instance
-            .chatBot(context, _selectedStage.name)
-            .then((answers) async {
-          for (var answer in answers) {
-            var qas = (await DbHelper.instance.database)
-                .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
-            var qa = Qa.fromMap((await qas).first);
-            qa.answer = answer.content;
-            await QaProvider.instance.update(qa);
-          }
-        });
+            .handleChatBot(ctx, _selectedStage.name, selectedIntent.name);
       });
     });
   }

@@ -452,6 +452,7 @@ class Answer extends $pb.GeneratedMessage {
   factory Answer({
     $core.int? qid,
     $core.String? content,
+    $core.String? extracted,
   }) {
     final $result = create();
     if (qid != null) {
@@ -459,6 +460,9 @@ class Answer extends $pb.GeneratedMessage {
     }
     if (content != null) {
       $result.content = content;
+    }
+    if (extracted != null) {
+      $result.extracted = extracted;
     }
     return $result;
   }
@@ -469,6 +473,7 @@ class Answer extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Answer', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'qid', $pb.PbFieldType.O3)
     ..aOS(2, _omitFieldNames ? '' : 'content')
+    ..aOS(3, _omitFieldNames ? '' : 'extracted')
     ..hasRequiredFields = false
   ;
 
@@ -510,6 +515,15 @@ class Answer extends $pb.GeneratedMessage {
   $core.bool hasContent() => $_has(1);
   @$pb.TagNumber(2)
   void clearContent() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get extracted => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set extracted($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasExtracted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExtracted() => clearField(3);
 }
 
 

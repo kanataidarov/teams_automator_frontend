@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,7 +68,8 @@ class ClientService {
     return transcription;
   }
 
-  Future<List<Answer>> chatBot(BuildContext ctx, String stage) async {
+  Future<List<Answer>> chatBot(
+      BuildContext ctx, String stage, String intent) async {
     final topic = (await SettingsProvider.instance.byName('topic')).value!;
     final model = (await SettingsProvider.instance.byName('model')).value!;
     final transcription =
@@ -78,7 +80,7 @@ class ClientService {
     ChatBotRequest request = ChatBotRequest(
         topic: topic,
         model: model,
-        questions: await _questions(stage, transcription),
+        questions: await _questions(transcription, stage, intent),
         isDebug: debugEnabled);
     _logger.d('Sending request - $request');
 
@@ -96,14 +98,20 @@ class ClientService {
     return answers;
   }
 
-  Future<List<Question>> _questions(String stage, String transcription) async {
+  Future<List<Question>> _questions(
+      String transcription, String stage, String intent) async {
     var db = await DbHelper.instance.database;
-    var qas = db.query(Qa.tableName, where: 'stage = ?', whereArgs: [stage]);
+    var qas = db.query(Qa.tableName,
+        where: 'stage = ? and qintent = ?', whereArgs: [stage, intent]);
+
+    var solveQa = await _solveQa(stage);
 
     List<Question> questions = List.empty(growable: true);
     for (var qaMap in await qas) {
       var qa = Qa.fromMap(qaMap);
-      qa.question = qa.question!.format({'transcription': transcription});
+
+      qa.question = _embedTexts(qa, solveQa, transcription);
+
       questions.add(Question(
           qid: qa.id,
           content: qa.question,
@@ -113,5 +121,64 @@ class ClientService {
     }
 
     return questions;
+  }
+
+  String _embedTexts(Qa qa, Qa solveQa, String transcription) {
+    switch (qa.qintent) {
+      case Question_Intent.CLARIFY:
+      case Question_Intent.CORRECT:
+        return qa.question!.format({
+          'transcription': transcription,
+          'dialogue': solveQa.dialogue,
+          'questions': solveQa.extracted
+        });
+      case Question_Intent.SOLVE:
+        return qa.question!.format({'transcription': transcription});
+      default:
+        return qa.question!;
+    }
+  }
+
+  void handleChatBot(BuildContext ctx, String stage, String intent) async {
+    chatBot(ctx, stage, intent).then((answers) async {
+      for (var answer in answers) {
+        final qas = await (await DbHelper.instance.database)
+            .query(Qa.tableName, where: 'id = ?', whereArgs: [answer.qid]);
+        var qa = Qa.fromMap(qas.first);
+        qa.answer = answer.content;
+        qa.extracted = answer.extracted;
+        await QaProvider.instance.update(qa);
+
+        final root =
+            jsonDecode(_extractJson(answer.content)) as Map<String, dynamic>;
+        final items = root['interview_session'] as List;
+
+        var solveQa = await _solveQa(stage);
+        for (final item in items) {
+          solveQa.dialogue =
+              '${solveQa.dialogue} \nInterviewer: ${item['question']} '
+              '\nCandidate: ${item['answer']}\n';
+        }
+
+        await QaProvider.instance.update(solveQa);
+      }
+    });
+  }
+
+  String _extractJson(String content) {
+    content = ' $content';
+    var idx = content.indexOf(RegExp(r'\{'));
+    content = content.replaceRange(0, idx - 1, '');
+
+    idx = content.lastIndexOf(RegExp(r'\}'));
+    content = ('$content ').replaceRange(idx + 1, null, '');
+
+    return content;
+  }
+
+  Future<Qa> _solveQa(String stage) async {
+    final solveQas = (await DbHelper.instance.database).query(Qa.tableName,
+        where: 'stage = ? and qintent = ?', whereArgs: [stage, 'SOLVE']);
+    return Qa.fromMap((await solveQas).first);
   }
 }
