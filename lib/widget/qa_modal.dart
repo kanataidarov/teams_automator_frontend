@@ -75,6 +75,7 @@ class _QaModalState extends State<QaModal> {
               expands: true,
               keyboardType: TextInputType.multiline,
               maxLines: null,
+              readOnly: true,
             ),
           ),
           const SizedBox(
