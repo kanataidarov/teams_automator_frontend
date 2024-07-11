@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
 import 'package:interview_automator_frontend/widget/style.dart';
+import 'package:interview_automator_frontend/widget/vgap.dart';
 
 import '../storage/model/settings.dart';
 
@@ -41,9 +42,7 @@ class _ReinitModalState extends State<ReinitModal> {
               widget.setting.description!,
               style: ModalsStyle.descriptionStyle,
             ),
-            const SizedBox(
-              height: 9,
-            ),
+            const VGap(),
             Expanded(
                 child: TextField(
                     controller: _tfControl,

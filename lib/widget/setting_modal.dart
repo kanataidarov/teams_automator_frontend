@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/style.dart';
+import 'package:interview_automator_frontend/widget/vgap.dart';
 
 class SettingModal extends StatefulWidget {
   final Setting setting;
@@ -41,9 +42,7 @@ class _SettingModalState extends State<SettingModal> {
               setting.description!,
               style: ModalsStyle.descriptionStyle,
             ),
-            const SizedBox(
-              height: 9,
-            ),
+            const VGap(),
             Expanded(
                 child: InputField(tfControl: tfControl, type: setting.type!))
           ]),

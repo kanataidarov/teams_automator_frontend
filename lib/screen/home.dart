@@ -14,6 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:record/record.dart';
 
+import '../widget/vgap.dart';
+
 Logger _logger = Logger(level: Level.debug);
 
 class MyHomePage extends StatefulWidget {
@@ -171,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               value: item,
                               child: Row(children: [
                                 const Icon(Icons.question_answer_outlined),
-                                const SizedBox(width: 9),
+                                const VGap(),
                                 Text(toBeginningOfSentenceCase(
                                     item.name.toLowerCase()))
                               ]));
@@ -182,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           });
                         },
                         value: _selectedStage),
-                    const SizedBox(height: 27),
+                    const VGap(height: 27),
                     LayoutBuilder(builder: (context, limits) {
                       return ToggleButtons(
                         direction: Axis.horizontal,
@@ -208,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             .toList(),
                       );
                     }),
-                    const SizedBox(height: 9),
+                    const VGap(),
                     Expanded(
                         child: RecordButton(
                             isRecording: _isRecording, record: _record))

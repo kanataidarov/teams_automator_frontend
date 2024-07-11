@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:interview_automator_frontend/storage/model/settings.dart';
 import 'package:interview_automator_frontend/widget/style.dart';
+import 'package:interview_automator_frontend/widget/vgap.dart';
 
 class DefaultSettingModal extends StatefulWidget {
   final Setting setting;
@@ -41,9 +42,7 @@ class _DefaultSettingModalState extends State<DefaultSettingModal> {
             widget.setting.description!,
             style: ModalsStyle.descriptionStyle,
           ),
-          const SizedBox(
-            height: 18,
-          ),
+          const VGap(height: 18),
           Row(children: <Widget>[
             const Text('Default path'),
             const SizedBox(
@@ -57,9 +56,7 @@ class _DefaultSettingModalState extends State<DefaultSettingModal> {
                   });
                 })
           ]),
-          const SizedBox(
-            height: 18,
-          ),
+          const VGap(height: 18),
           Expanded(
             child: TextField(
               controller: _tfControl,

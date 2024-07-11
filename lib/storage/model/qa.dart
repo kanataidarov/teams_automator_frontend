@@ -18,7 +18,8 @@ class Qa extends DbModel {
         dialogue TEXT,
         answer TEXT,
         anstype VARCHAR(20) NOT NULL,
-        stage VARCHAR(20) NOT NULL
+        stage VARCHAR(20) NOT NULL,
+        extracted TEXT
       );''';
 
   String? title;
@@ -29,6 +30,7 @@ class Qa extends DbModel {
   String? answer;
   Question_AnswerType? anstype;
   Question_Stage? stage;
+  String? extracted;
 
   Qa(
       {super.id,
@@ -39,7 +41,8 @@ class Qa extends DbModel {
       this.dialogue,
       this.answer,
       this.anstype,
-      this.stage});
+      this.stage,
+      this.extracted});
 
   @override
   Map<String, dynamic> toMap() {
@@ -52,7 +55,8 @@ class Qa extends DbModel {
       'dialogue': dialogue,
       'answer': answer,
       'anstype': anstype!.name.toUpperCase(),
-      'stage': stage!.name..toUpperCase()
+      'stage': stage!.name..toUpperCase(),
+      'extracted': extracted
     };
   }
 
@@ -68,6 +72,7 @@ class Qa extends DbModel {
         .firstWhere((e) => e.name.toUpperCase() == map['anstype']);
     stage = Question_Stage.values
         .firstWhere((e) => e.name.toUpperCase() == map['stage']);
+    extracted = map['extracted'];
   }
 
   @override
