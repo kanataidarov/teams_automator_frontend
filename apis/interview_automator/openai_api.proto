@@ -37,6 +37,16 @@ enum QIntent {
   CORRECT = 3;
 }
 
+message Prompt {
+  string extract = 1;
+  string theory_intro = 2;
+  string theory_outro = 3;
+  string livecoding_intro = 4;
+  string livecoding_outro = 5;
+  string softskills_intro = 6;
+  string softskills_outro = 7;
+}
+
 message ChatBotRequest {
   string topic = 1;
   string model = 2;
@@ -45,6 +55,7 @@ message ChatBotRequest {
   Stage stage = 5;
   QIntent intent = 6;
   string lang = 7;
+  Prompt prompt = 8;
 }
 
 message Question {

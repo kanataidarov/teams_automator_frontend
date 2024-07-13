@@ -32,11 +32,14 @@ class ClientService {
     final host = (await SettingsProvider.instance.byName('host')).value!;
     final port =
         int.parse((await SettingsProvider.instance.byName('port')).value!);
+    final backendTimeout = int.parse(
+        (await SettingsProvider.instance.byName('backend_timeout')).value!);
+
     final channel = ClientChannel(host,
         port: port,
-        options: const ChannelOptions(
-            credentials: ChannelCredentials.insecure(),
-            connectTimeout: Duration(seconds: 10)));
+        options: ChannelOptions(
+            credentials: const ChannelCredentials.insecure(),
+            connectTimeout: Duration(seconds: backendTimeout)));
     _logger.d('Channel (re)initialized. Host - $host, port - $port');
     return OpenAiApiClient(channel);
   }
@@ -78,6 +81,26 @@ class ClientService {
         (await SettingsProvider.instance.byName('debug_enabled')).value!);
     final lang = (await SettingsProvider.instance.byName('lang')).value;
 
+    final prompt = Prompt();
+    prompt.extract =
+        (await SettingsProvider.instance.byName('prompt_extract')).value!;
+    prompt.theoryIntro =
+        (await SettingsProvider.instance.byName('prompt_theory_intro')).value!;
+    prompt.theoryOutro =
+        (await SettingsProvider.instance.byName('prompt_theory_outro')).value!;
+    prompt.livecodingIntro =
+        (await SettingsProvider.instance.byName('prompt_livecoding_intro'))
+            .value!;
+    prompt.livecodingOutro =
+        (await SettingsProvider.instance.byName('prompt_livecoding_outro'))
+            .value!;
+    prompt.softskillsIntro =
+        (await SettingsProvider.instance.byName('prompt_softskills_intro'))
+            .value!;
+    prompt.softskillsOutro =
+        (await SettingsProvider.instance.byName('prompt_softskills_outro'))
+            .value!;
+
     ChatBotRequest request = ChatBotRequest(
         topic: topic,
         model: model,
@@ -85,8 +108,9 @@ class ClientService {
         isDebug: debugEnabled,
         stage: stage,
         intent: intent,
-        lang: lang);
-    _logger.d('Sending request - $request');
+        lang: lang,
+        prompt: prompt);
+    _logger.i('Sending request - $request');
 
     List<Answer> answers = List.empty();
     try {

@@ -91,6 +91,28 @@ final $typed_data.Uint8List transcribeResponseDescriptor = $convert.base64Decode
     'ChJUcmFuc2NyaWJlUmVzcG9uc2USJAoNdHJhbnNjcmlwdGlvbhgBIAEoCVINdHJhbnNjcmlwdG'
     'lvbg==');
 
+@$core.Deprecated('Use promptDescriptor instead')
+const Prompt$json = {
+  '1': 'Prompt',
+  '2': [
+    {'1': 'extract', '3': 1, '4': 1, '5': 9, '10': 'extract'},
+    {'1': 'theory_intro', '3': 2, '4': 1, '5': 9, '10': 'theoryIntro'},
+    {'1': 'theory_outro', '3': 3, '4': 1, '5': 9, '10': 'theoryOutro'},
+    {'1': 'livecoding_intro', '3': 4, '4': 1, '5': 9, '10': 'livecodingIntro'},
+    {'1': 'livecoding_outro', '3': 5, '4': 1, '5': 9, '10': 'livecodingOutro'},
+    {'1': 'softskills_intro', '3': 6, '4': 1, '5': 9, '10': 'softskillsIntro'},
+    {'1': 'softskills_outro', '3': 7, '4': 1, '5': 9, '10': 'softskillsOutro'},
+  ],
+};
+
+/// Descriptor for `Prompt`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List promptDescriptor = $convert.base64Decode(
+    'CgZQcm9tcHQSGAoHZXh0cmFjdBgBIAEoCVIHZXh0cmFjdBIhCgx0aGVvcnlfaW50cm8YAiABKA'
+    'lSC3RoZW9yeUludHJvEiEKDHRoZW9yeV9vdXRybxgDIAEoCVILdGhlb3J5T3V0cm8SKQoQbGl2'
+    'ZWNvZGluZ19pbnRybxgEIAEoCVIPbGl2ZWNvZGluZ0ludHJvEikKEGxpdmVjb2Rpbmdfb3V0cm'
+    '8YBSABKAlSD2xpdmVjb2RpbmdPdXRybxIpChBzb2Z0c2tpbGxzX2ludHJvGAYgASgJUg9zb2Z0'
+    'c2tpbGxzSW50cm8SKQoQc29mdHNraWxsc19vdXRybxgHIAEoCVIPc29mdHNraWxsc091dHJv');
+
 @$core.Deprecated('Use chatBotRequestDescriptor instead')
 const ChatBotRequest$json = {
   '1': 'ChatBotRequest',
@@ -102,6 +124,7 @@ const ChatBotRequest$json = {
     {'1': 'stage', '3': 5, '4': 1, '5': 14, '6': '.interview_automator.Stage', '10': 'stage'},
     {'1': 'intent', '3': 6, '4': 1, '5': 14, '6': '.interview_automator.QIntent', '10': 'intent'},
     {'1': 'lang', '3': 7, '4': 1, '5': 9, '10': 'lang'},
+    {'1': 'prompt', '3': 8, '4': 1, '5': 11, '6': '.interview_automator.Prompt', '10': 'prompt'},
   ],
 };
 
@@ -111,7 +134,8 @@ final $typed_data.Uint8List chatBotRequestDescriptor = $convert.base64Decode(
     '1vZGVsEjsKCXF1ZXN0aW9ucxgDIAMoCzIdLmludGVydmlld19hdXRvbWF0b3IuUXVlc3Rpb25S'
     'CXF1ZXN0aW9ucxIZCghpc19kZWJ1ZxgEIAEoCFIHaXNEZWJ1ZxIwCgVzdGFnZRgFIAEoDjIaLm'
     'ludGVydmlld19hdXRvbWF0b3IuU3RhZ2VSBXN0YWdlEjQKBmludGVudBgGIAEoDjIcLmludGVy'
-    'dmlld19hdXRvbWF0b3IuUUludGVudFIGaW50ZW50EhIKBGxhbmcYByABKAlSBGxhbmc=');
+    'dmlld19hdXRvbWF0b3IuUUludGVudFIGaW50ZW50EhIKBGxhbmcYByABKAlSBGxhbmcSMwoGcH'
+    'JvbXB0GAggASgLMhsuaW50ZXJ2aWV3X2F1dG9tYXRvci5Qcm9tcHRSBnByb21wdA==');
 
 @$core.Deprecated('Use questionDescriptor instead')
 const Question$json = {

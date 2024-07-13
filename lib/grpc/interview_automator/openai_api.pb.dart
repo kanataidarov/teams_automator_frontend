@@ -212,6 +212,140 @@ class TranscribeResponse extends $pb.GeneratedMessage {
   void clearTranscription() => clearField(1);
 }
 
+class Prompt extends $pb.GeneratedMessage {
+  factory Prompt({
+    $core.String? extract,
+    $core.String? theoryIntro,
+    $core.String? theoryOutro,
+    $core.String? livecodingIntro,
+    $core.String? livecodingOutro,
+    $core.String? softskillsIntro,
+    $core.String? softskillsOutro,
+  }) {
+    final $result = create();
+    if (extract != null) {
+      $result.extract = extract;
+    }
+    if (theoryIntro != null) {
+      $result.theoryIntro = theoryIntro;
+    }
+    if (theoryOutro != null) {
+      $result.theoryOutro = theoryOutro;
+    }
+    if (livecodingIntro != null) {
+      $result.livecodingIntro = livecodingIntro;
+    }
+    if (livecodingOutro != null) {
+      $result.livecodingOutro = livecodingOutro;
+    }
+    if (softskillsIntro != null) {
+      $result.softskillsIntro = softskillsIntro;
+    }
+    if (softskillsOutro != null) {
+      $result.softskillsOutro = softskillsOutro;
+    }
+    return $result;
+  }
+  Prompt._() : super();
+  factory Prompt.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Prompt.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Prompt', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'extract')
+    ..aOS(2, _omitFieldNames ? '' : 'theoryIntro')
+    ..aOS(3, _omitFieldNames ? '' : 'theoryOutro')
+    ..aOS(4, _omitFieldNames ? '' : 'livecodingIntro')
+    ..aOS(5, _omitFieldNames ? '' : 'livecodingOutro')
+    ..aOS(6, _omitFieldNames ? '' : 'softskillsIntro')
+    ..aOS(7, _omitFieldNames ? '' : 'softskillsOutro')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Prompt clone() => Prompt()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Prompt copyWith(void Function(Prompt) updates) => super.copyWith((message) => updates(message as Prompt)) as Prompt;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Prompt create() => Prompt._();
+  Prompt createEmptyInstance() => create();
+  static $pb.PbList<Prompt> createRepeated() => $pb.PbList<Prompt>();
+  @$core.pragma('dart2js:noInline')
+  static Prompt getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Prompt>(create);
+  static Prompt? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get extract => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set extract($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasExtract() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExtract() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get theoryIntro => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set theoryIntro($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasTheoryIntro() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTheoryIntro() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get theoryOutro => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set theoryOutro($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasTheoryOutro() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTheoryOutro() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get livecodingIntro => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set livecodingIntro($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasLivecodingIntro() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLivecodingIntro() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get livecodingOutro => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set livecodingOutro($core.String v) { $_setString(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasLivecodingOutro() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLivecodingOutro() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get softskillsIntro => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set softskillsIntro($core.String v) { $_setString(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasSoftskillsIntro() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSoftskillsIntro() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get softskillsOutro => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set softskillsOutro($core.String v) { $_setString(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasSoftskillsOutro() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSoftskillsOutro() => clearField(7);
+}
+
 class ChatBotRequest extends $pb.GeneratedMessage {
   factory ChatBotRequest({
     $core.String? topic,
@@ -221,6 +355,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     Stage? stage,
     QIntent? intent,
     $core.String? lang,
+    Prompt? prompt,
   }) {
     final $result = create();
     if (topic != null) {
@@ -244,6 +379,9 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     if (lang != null) {
       $result.lang = lang;
     }
+    if (prompt != null) {
+      $result.prompt = prompt;
+    }
     return $result;
   }
   ChatBotRequest._() : super();
@@ -258,6 +396,7 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     ..e<Stage>(5, _omitFieldNames ? '' : 'stage', $pb.PbFieldType.OE, defaultOrMaker: Stage.DEFAULT_STAGE, valueOf: Stage.valueOf, enumValues: Stage.values)
     ..e<QIntent>(6, _omitFieldNames ? '' : 'intent', $pb.PbFieldType.OE, defaultOrMaker: QIntent.DEFAULT_INTENT, valueOf: QIntent.valueOf, enumValues: QIntent.values)
     ..aOS(7, _omitFieldNames ? '' : 'lang')
+    ..aOM<Prompt>(8, _omitFieldNames ? '' : 'prompt', subBuilder: Prompt.create)
     ..hasRequiredFields = false
   ;
 
@@ -338,6 +477,17 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   $core.bool hasLang() => $_has(6);
   @$pb.TagNumber(7)
   void clearLang() => clearField(7);
+
+  @$pb.TagNumber(8)
+  Prompt get prompt => $_getN(7);
+  @$pb.TagNumber(8)
+  set prompt(Prompt v) { setField(8, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasPrompt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearPrompt() => clearField(8);
+  @$pb.TagNumber(8)
+  Prompt ensurePrompt() => $_ensure(7);
 }
 
 class Question extends $pb.GeneratedMessage {
