@@ -81,9 +81,12 @@ class ClientService {
         (await SettingsProvider.instance.byName('debug_enabled')).value!);
     final lang = (await SettingsProvider.instance.byName('lang')).value;
 
-    final prompt = Prompt();
-    prompt.extract =
+    final promptExtract =
         (await SettingsProvider.instance.byName('prompt_extract')).value!;
+    final extract = promptExtract.format({'transcription': transcription});
+
+    final prompt = Prompt();
+    prompt.extract = extract;
     prompt.theoryIntro =
         (await SettingsProvider.instance.byName('prompt_theory_intro')).value!;
     prompt.theoryOutro =

@@ -93,7 +93,7 @@
     {
       "id": 11,
       "name": "prompt_extract",
-      "value": "Extract all the questions asked by interviewer.",
+      "value": "Extract all the questions asked by interviewer from given transcription part of the interview: \n\n{transcription}. \n\nExtract questions only, do not include answers or additional information.",
       "title": "Prompt - Extract questions",
       "section": "Open AI",
       "type": "text",
