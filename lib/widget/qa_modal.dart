@@ -20,8 +20,8 @@ class QaModal extends StatefulWidget {
 class _QaModalState extends State<QaModal> {
   late Map<String, TextEditingController> _controllers;
   late Question_AnswerType _selectedAnstype;
-  late Question_Intent _selectedIntent;
-  late Question_Stage _selectedStage;
+  late QIntent _selectedIntent;
+  late Stage _selectedStage;
   late int _ord;
 
   @override
@@ -40,8 +40,8 @@ class _QaModalState extends State<QaModal> {
 
     _selectedAnstype =
         null == qa.anstype ? Question_AnswerType.RAW : qa.anstype!;
-    _selectedIntent = null == qa.qintent ? Question_Intent.SOLVE : qa.qintent!;
-    _selectedStage = null == qa.stage ? Question_Stage.THEORY : qa.stage!;
+    _selectedIntent = null == qa.qintent ? QIntent.SOLVE : qa.qintent!;
+    _selectedStage = null == qa.stage ? Stage.THEORY : qa.stage!;
 
     super.initState();
   }
@@ -56,7 +56,7 @@ class _QaModalState extends State<QaModal> {
   Widget build(BuildContext ctx) {
     final qa = widget.qa;
 
-    Future<List<Qa>> fetchQa(Question_Stage stage) async {
+    Future<List<Qa>> fetchQa(Stage stage) async {
       if (qa.title?.isEmpty ?? true) {
         final res = (await DbHelper.instance.database).rawQuery(
             'SELECT MAX(ord) as max_ord FROM ${Qa.tableName} WHERE stage = \'${stage.name}\'');
@@ -109,7 +109,7 @@ class _QaModalState extends State<QaModal> {
           DropdownButtonFormField(
               decoration: const InputDecoration(
                   labelText: 'Stage', border: OutlineInputBorder()),
-              items: Question_Stage.values.map((Question_Stage item) {
+              items: Stage.values.map((Stage item) {
                 return DropdownMenuItem(
                     value: item,
                     child: Row(children: [
@@ -118,7 +118,7 @@ class _QaModalState extends State<QaModal> {
                       Text(toBeginningOfSentenceCase(item.name.toLowerCase()))
                     ]));
               }).toList(),
-              onChanged: (Question_Stage? selectedStage) {
+              onChanged: (Stage? selectedStage) {
                 fetchQa(selectedStage!).then((_) {
                   setState(() {
                     _selectedStage = selectedStage;
@@ -149,7 +149,7 @@ class _QaModalState extends State<QaModal> {
           DropdownButtonFormField(
               decoration: const InputDecoration(
                   labelText: 'Intent', border: OutlineInputBorder()),
-              items: Question_Intent.values.map((Question_Intent item) {
+              items: QIntent.values.map((QIntent item) {
                 return DropdownMenuItem(
                     value: item,
                     child: Row(children: [
@@ -158,7 +158,7 @@ class _QaModalState extends State<QaModal> {
                       Text(toBeginningOfSentenceCase(item.name.toLowerCase()))
                     ]));
               }).toList(),
-              onChanged: (Question_Intent? selectedItem) {
+              onChanged: (QIntent? selectedItem) {
                 setState(() {
                   _selectedIntent = selectedItem!;
                 });

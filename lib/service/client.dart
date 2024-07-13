@@ -69,19 +69,23 @@ class ClientService {
   }
 
   Future<List<Answer>> chatBot(
-      BuildContext ctx, String stage, String intent) async {
+      BuildContext ctx, Stage stage, QIntent intent) async {
     final topic = (await SettingsProvider.instance.byName('topic')).value!;
     final model = (await SettingsProvider.instance.byName('model')).value!;
     final transcription =
         (await SettingsProvider.instance.byName('transcription')).value!;
     final debugEnabled = bool.parse(
         (await SettingsProvider.instance.byName('debug_enabled')).value!);
+    final lang = (await SettingsProvider.instance.byName('lang')).value;
 
     ChatBotRequest request = ChatBotRequest(
         topic: topic,
         model: model,
         questions: await _questions(transcription, stage, intent),
-        isDebug: debugEnabled);
+        isDebug: debugEnabled,
+        stage: stage,
+        intent: intent,
+        lang: lang);
     _logger.d('Sending request - $request');
 
     List<Answer> answers = List.empty();
@@ -99,10 +103,11 @@ class ClientService {
   }
 
   Future<List<Question>> _questions(
-      String transcription, String stage, String intent) async {
+      String transcription, Stage stage, QIntent intent) async {
     var db = await DbHelper.instance.database;
     var qas = db.query(Qa.tableName,
-        where: 'stage = ? and qintent = ?', whereArgs: [stage, intent]);
+        where: 'stage = ? and qintent = ?',
+        whereArgs: [stage.name, intent.name]);
 
     var solveQa = await _solveQa(stage);
 
@@ -112,12 +117,8 @@ class ClientService {
 
       qa.question = _embedTexts(qa, solveQa, transcription);
 
-      questions.add(Question(
-          qid: qa.id,
-          content: qa.question,
-          ansType: qa.anstype,
-          intent: qa.qintent,
-          stage: qa.stage));
+      questions
+          .add(Question(qid: qa.id, content: qa.question, ansType: qa.anstype));
     }
 
     return questions;
@@ -125,28 +126,28 @@ class ClientService {
 
   String _embedTexts(Qa qa, Qa solveQa, String transcription) {
     switch (qa.stage) {
-      case Question_Stage.THEORY:
-      case Question_Stage.SOFTSKILLS:
+      case Stage.THEORY:
+      case Stage.SOFTSKILLS:
         switch (qa.qintent) {
-          case Question_Intent.CLARIFY:
-          case Question_Intent.CORRECT:
+          case QIntent.CLARIFY:
+          case QIntent.CORRECT:
             return qa.question!.format({
               'transcription': transcription,
               'dialogue': solveQa.dialogue,
               'questions': solveQa.extracted
             });
-          case Question_Intent.SOLVE:
+          case QIntent.SOLVE:
             return qa.question!.format({'transcription': transcription});
           default:
             return qa.question!;
         }
-      case Question_Stage.LIVECODING:
+      case Stage.LIVECODING:
         switch (qa.qintent) {
-          case Question_Intent.CLARIFY:
-          case Question_Intent.CORRECT:
+          case QIntent.CLARIFY:
+          case QIntent.CORRECT:
             return qa.question!.format(
                 {'transcription': transcription, 'dialogue': solveQa.dialogue});
-          case Question_Intent.SOLVE:
+          case QIntent.SOLVE:
             return qa.question!.format({'transcription': transcription});
           default:
             return qa.question!;
@@ -156,7 +157,7 @@ class ClientService {
     }
   }
 
-  void handleChatBot(BuildContext ctx, String stage, String intent) async {
+  void handleChatBot(BuildContext ctx, Stage stage, QIntent intent) async {
     chatBot(ctx, stage, intent).then((answers) async {
       for (var answer in answers) {
         final qas = await (await DbHelper.instance.database)
@@ -193,9 +194,9 @@ class ClientService {
     return content;
   }
 
-  Future<Qa> _solveQa(String stage) async {
+  Future<Qa> _solveQa(Stage stage) async {
     final solveQas = (await DbHelper.instance.database).query(Qa.tableName,
-        where: 'stage = ? and qintent = ?', whereArgs: [stage, 'SOLVE']);
+        where: 'stage = ? and qintent = ?', whereArgs: [stage.name, 'SOLVE']);
     return Qa.fromMap((await solveQas).first);
   }
 }

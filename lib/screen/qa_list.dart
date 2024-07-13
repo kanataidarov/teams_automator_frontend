@@ -59,7 +59,7 @@ class _QaListState extends State<QaList> {
   }
 
   List<SettingsSection> _sections(List<Qa> qas) {
-    Map<Question_Stage, List<SettingsTile>> tilesMap = {};
+    Map<Stage, List<SettingsTile>> tilesMap = {};
     for (var qa in qas) {
       if (!tilesMap.containsKey(qa.stage!)) {
         tilesMap[qa.stage!] = List.empty(growable: true);

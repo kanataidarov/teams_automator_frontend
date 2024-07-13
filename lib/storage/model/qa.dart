@@ -25,11 +25,11 @@ class Qa extends DbModel {
   String? title;
   int? ord;
   String? question;
-  Question_Intent? qintent;
+  QIntent? qintent;
   String? dialogue;
   String? answer;
   Question_AnswerType? anstype;
-  Question_Stage? stage;
+  Stage? stage;
   String? extracted;
 
   Qa(
@@ -64,14 +64,14 @@ class Qa extends DbModel {
     title = map['title'];
     ord = map['ord'];
     question = map['question'];
-    qintent = Question_Intent.values
+    qintent = QIntent.values
         .firstWhere((e) => e.name.toUpperCase() == map['qintent']);
     dialogue = map['dialogue'];
     answer = map['answer'];
     anstype = Question_AnswerType.values
         .firstWhere((e) => e.name.toUpperCase() == map['anstype']);
-    stage = Question_Stage.values
-        .firstWhere((e) => e.name.toUpperCase() == map['stage']);
+    stage =
+        Stage.values.firstWhere((e) => e.name.toUpperCase() == map['stage']);
     extracted = map['extracted'];
   }
 

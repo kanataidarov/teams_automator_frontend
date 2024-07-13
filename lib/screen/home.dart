@@ -1,8 +1,7 @@
+import '../grpc/interview_automator/openai_api.pbenum.dart';
 import '../storage/memory.dart';
 import '../widget/vgap.dart';
 import 'package:flutter/material.dart';
-import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pb.dart';
-import 'package:interview_automator_frontend/grpc/interview_automator/openai_api.pbenum.dart';
 import 'package:interview_automator_frontend/screen/settings.dart';
 import 'package:interview_automator_frontend/service/client.dart';
 import 'package:interview_automator_frontend/storage/db.dart';
@@ -29,14 +28,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final AudioRecorder _recorder;
-  late Question_Stage _selectedStage;
+  late Stage _selectedStage;
 
   bool _isRecording = false;
   bool _recorderReady = false;
-  final Map<Question_Intent, bool> _subStages = {
-    Question_Intent.CLARIFY: false,
-    Question_Intent.SOLVE: true,
-    Question_Intent.CORRECT: false
+  final Map<QIntent, bool> _subStages = {
+    QIntent.CLARIFY: false,
+    QIntent.SOLVE: true,
+    QIntent.CORRECT: false
   };
 
   @override
@@ -147,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _logger.d(
             'Calling ClientService.handleChatBot with parameters: ${_selectedStage.name}, ${selectedIntent.name}');
         ClientService.instance
-            .handleChatBot(ctx, _selectedStage.name, selectedIntent.name);
+            .handleChatBot(ctx, _selectedStage, selectedIntent);
       });
     });
   }
@@ -166,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     DropdownButtonFormField(
                         decoration: const InputDecoration(
                             labelText: 'Stage', border: OutlineInputBorder()),
-                        items: Question_Stage.values.map((Question_Stage item) {
+                        items: Stage.values.map((Stage item) {
                           return DropdownMenuItem(
                               value: item,
                               child: Row(children: [
@@ -176,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     item.name.toLowerCase()))
                               ]));
                         }).toList(),
-                        onChanged: (Question_Stage? selectedItem) {
+                        onChanged: (Stage? selectedItem) {
                           context.read<Memory>().setStage(selectedItem!);
                           setState(() {
                             _selectedStage = selectedItem;
@@ -188,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return ToggleButtons(
                         direction: Axis.horizontal,
                         onPressed: (int selectedIndex) {
-                          Question_Intent intent =
+                          QIntent intent =
                               _subStages.keys.toList()[selectedIndex];
                           setState(() {
                             _subStages.updateAll(
@@ -203,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         isSelected: List.of(_subStages.values),
                         children: _subStages.keys
-                            .map((Question_Intent key) => Text(
+                            .map((QIntent key) => Text(
                                 toBeginningOfSentenceCase(
                                     key.name.toLowerCase())))
                             .toList(),

@@ -218,6 +218,9 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     $core.String? model,
     $core.Iterable<Question>? questions,
     $core.bool? isDebug,
+    Stage? stage,
+    QIntent? intent,
+    $core.String? lang,
   }) {
     final $result = create();
     if (topic != null) {
@@ -232,6 +235,15 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     if (isDebug != null) {
       $result.isDebug = isDebug;
     }
+    if (stage != null) {
+      $result.stage = stage;
+    }
+    if (intent != null) {
+      $result.intent = intent;
+    }
+    if (lang != null) {
+      $result.lang = lang;
+    }
     return $result;
   }
   ChatBotRequest._() : super();
@@ -243,6 +255,9 @@ class ChatBotRequest extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'model')
     ..pc<Question>(3, _omitFieldNames ? '' : 'questions', $pb.PbFieldType.PM, subBuilder: Question.create)
     ..aOB(4, _omitFieldNames ? '' : 'isDebug')
+    ..e<Stage>(5, _omitFieldNames ? '' : 'stage', $pb.PbFieldType.OE, defaultOrMaker: Stage.DEFAULT_STAGE, valueOf: Stage.valueOf, enumValues: Stage.values)
+    ..e<QIntent>(6, _omitFieldNames ? '' : 'intent', $pb.PbFieldType.OE, defaultOrMaker: QIntent.DEFAULT_INTENT, valueOf: QIntent.valueOf, enumValues: QIntent.values)
+    ..aOS(7, _omitFieldNames ? '' : 'lang')
     ..hasRequiredFields = false
   ;
 
@@ -296,6 +311,33 @@ class ChatBotRequest extends $pb.GeneratedMessage {
   $core.bool hasIsDebug() => $_has(3);
   @$pb.TagNumber(4)
   void clearIsDebug() => clearField(4);
+
+  @$pb.TagNumber(5)
+  Stage get stage => $_getN(4);
+  @$pb.TagNumber(5)
+  set stage(Stage v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasStage() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStage() => clearField(5);
+
+  @$pb.TagNumber(6)
+  QIntent get intent => $_getN(5);
+  @$pb.TagNumber(6)
+  set intent(QIntent v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasIntent() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearIntent() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get lang => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set lang($core.String v) { $_setString(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasLang() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearLang() => clearField(7);
 }
 
 class Question extends $pb.GeneratedMessage {
@@ -303,8 +345,6 @@ class Question extends $pb.GeneratedMessage {
     $core.int? qid,
     $core.String? content,
     Question_AnswerType? ansType,
-    Question_Intent? intent,
-    Question_Stage? stage,
   }) {
     final $result = create();
     if (qid != null) {
@@ -316,12 +356,6 @@ class Question extends $pb.GeneratedMessage {
     if (ansType != null) {
       $result.ansType = ansType;
     }
-    if (intent != null) {
-      $result.intent = intent;
-    }
-    if (stage != null) {
-      $result.stage = stage;
-    }
     return $result;
   }
   Question._() : super();
@@ -331,9 +365,7 @@ class Question extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Question', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'qid', $pb.PbFieldType.O3)
     ..aOS(2, _omitFieldNames ? '' : 'content')
-    ..e<Question_AnswerType>(3, _omitFieldNames ? '' : 'ansType', $pb.PbFieldType.OE, defaultOrMaker: Question_AnswerType.RAW, valueOf: Question_AnswerType.valueOf, enumValues: Question_AnswerType.values)
-    ..e<Question_Intent>(4, _omitFieldNames ? '' : 'intent', $pb.PbFieldType.OE, defaultOrMaker: Question_Intent.CLARIFY, valueOf: Question_Intent.valueOf, enumValues: Question_Intent.values)
-    ..e<Question_Stage>(5, _omitFieldNames ? '' : 'stage', $pb.PbFieldType.OE, defaultOrMaker: Question_Stage.THEORY, valueOf: Question_Stage.valueOf, enumValues: Question_Stage.values)
+    ..e<Question_AnswerType>(3, _omitFieldNames ? '' : 'ansType', $pb.PbFieldType.OE, defaultOrMaker: Question_AnswerType.DEFAULT_ANSTYPE, valueOf: Question_AnswerType.valueOf, enumValues: Question_AnswerType.values)
     ..hasRequiredFields = false
   ;
 
@@ -384,33 +416,23 @@ class Question extends $pb.GeneratedMessage {
   $core.bool hasAnsType() => $_has(2);
   @$pb.TagNumber(3)
   void clearAnsType() => clearField(3);
-
-  @$pb.TagNumber(4)
-  Question_Intent get intent => $_getN(3);
-  @$pb.TagNumber(4)
-  set intent(Question_Intent v) { setField(4, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasIntent() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearIntent() => clearField(4);
-
-  @$pb.TagNumber(5)
-  Question_Stage get stage => $_getN(4);
-  @$pb.TagNumber(5)
-  set stage(Question_Stage v) { setField(5, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasStage() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearStage() => clearField(5);
 }
 
 class ChatBotResponse extends $pb.GeneratedMessage {
   factory ChatBotResponse({
     $core.Iterable<Answer>? answers,
+    Stage? stage,
+    $core.String? lang,
   }) {
     final $result = create();
     if (answers != null) {
       $result.answers.addAll(answers);
+    }
+    if (stage != null) {
+      $result.stage = stage;
+    }
+    if (lang != null) {
+      $result.lang = lang;
     }
     return $result;
   }
@@ -420,6 +442,8 @@ class ChatBotResponse extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ChatBotResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'interview_automator'), createEmptyInstance: create)
     ..pc<Answer>(1, _omitFieldNames ? '' : 'answers', $pb.PbFieldType.PM, subBuilder: Answer.create)
+    ..e<Stage>(2, _omitFieldNames ? '' : 'stage', $pb.PbFieldType.OE, defaultOrMaker: Stage.DEFAULT_STAGE, valueOf: Stage.valueOf, enumValues: Stage.values)
+    ..aOS(3, _omitFieldNames ? '' : 'lang')
     ..hasRequiredFields = false
   ;
 
@@ -446,6 +470,24 @@ class ChatBotResponse extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.List<Answer> get answers => $_getList(0);
+
+  @$pb.TagNumber(2)
+  Stage get stage => $_getN(1);
+  @$pb.TagNumber(2)
+  set stage(Stage v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasStage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStage() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get lang => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set lang($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasLang() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLang() => clearField(3);
 }
 
 class Answer extends $pb.GeneratedMessage {

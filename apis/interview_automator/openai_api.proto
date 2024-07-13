@@ -23,41 +23,47 @@ message TranscribeResponse {
   string transcription = 1;
 }
 
+enum Stage {
+  DEFAULT_STAGE = 0;
+  THEORY = 1;
+  LIVECODING = 2;
+  SOFTSKILLS = 3;
+}
+
+enum QIntent {
+  DEFAULT_INTENT = 0;
+  CLARIFY = 1;
+  SOLVE = 2;
+  CORRECT = 3;
+}
+
 message ChatBotRequest {
   string topic = 1;
   string model = 2;
   repeated Question questions = 3;
   bool is_debug = 4;
+  Stage stage = 5;
+  QIntent intent = 6;
+  string lang = 7;
 }
 
 message Question {
   enum AnswerType {
-    RAW = 0;
-    JSON_ONLY = 1;
-    SNIPPET = 2;
-  }
-
-  enum Intent {
-    CLARIFY = 0;
-    SOLVE = 1;
-    CORRECT = 2;
-  }
-
-  enum Stage {
-    THEORY = 0;
-    LIVECODING = 1;
-    SOFTSKILLS = 2;
+    DEFAULT_ANSTYPE = 0;
+    RAW = 1;
+    JSON_ONLY = 2;
+    SNIPPET = 3;
   }
 
   int32 qid = 1;
   string content = 2;
   AnswerType ans_type = 3;
-  Intent intent = 4;
-  Stage stage = 5;
 }
 
 message ChatBotResponse {
   repeated Answer answers = 1;
+  Stage stage = 2;
+  string lang = 3;
 }
 
 message Answer {

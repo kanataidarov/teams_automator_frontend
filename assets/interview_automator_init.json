@@ -23,7 +23,7 @@
       "name": "model",
       "value": "gpt-4o",
       "title": "ChatGPT model",
-      "section": "Backend service",
+      "section": "Open AI",
       "type": "string",
       "description": "ChatGPT API model version"
     },
@@ -32,7 +32,7 @@
       "name": "topic",
       "value": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. Prepare Yourself to answer job interview questions.",
       "title": "Conversation Topic",
-      "section": "Backend service",
+      "section": "Open AI",
       "type": "text",
       "description": "First message to ChatGPT that defines topic of the whole conversation"
     },
@@ -80,6 +80,15 @@
       "section": "Backend service",
       "type": "integer",
       "description": "Connect timeout (seconds) to Interview Automator backend"
+    },
+    {
+      "id": 10,
+      "name": "lang",
+      "value": "Java",
+      "title": "Livecoding language",
+      "section": "Open AI",
+      "type": "string",
+      "description": "Livecoding session's programming language"
     }
   ],
   "qa": [
