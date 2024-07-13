@@ -165,7 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     DropdownButtonFormField(
                         decoration: const InputDecoration(
                             labelText: 'Stage', border: OutlineInputBorder()),
-                        items: Stage.values.map((Stage item) {
+                        items: Stage.values
+                            .where((e) => e.value != 0)
+                            .map((Stage item) {
                           return DropdownMenuItem(
                               value: item,
                               child: Row(children: [

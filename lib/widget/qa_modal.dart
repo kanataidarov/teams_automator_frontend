@@ -109,7 +109,7 @@ class _QaModalState extends State<QaModal> {
           DropdownButtonFormField(
               decoration: const InputDecoration(
                   labelText: 'Stage', border: OutlineInputBorder()),
-              items: Stage.values.map((Stage item) {
+              items: Stage.values.where((e) => e.value != 0).map((Stage item) {
                 return DropdownMenuItem(
                     value: item,
                     child: Row(children: [
@@ -130,7 +130,9 @@ class _QaModalState extends State<QaModal> {
           DropdownButtonFormField(
               decoration: const InputDecoration(
                   labelText: 'Answer type', border: OutlineInputBorder()),
-              items: Question_AnswerType.values.map((Question_AnswerType item) {
+              items: Question_AnswerType.values
+                  .where((e) => e.value != 0)
+                  .map((Question_AnswerType item) {
                 return DropdownMenuItem(
                     value: item,
                     child: Row(children: [
@@ -149,7 +151,8 @@ class _QaModalState extends State<QaModal> {
           DropdownButtonFormField(
               decoration: const InputDecoration(
                   labelText: 'Intent', border: OutlineInputBorder()),
-              items: QIntent.values.map((QIntent item) {
+              items:
+                  QIntent.values.where((e) => e.value != 0).map((QIntent item) {
                 return DropdownMenuItem(
                     value: item,
                     child: Row(children: [
