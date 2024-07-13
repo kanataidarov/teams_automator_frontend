@@ -81,6 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
       await _recorder.start(
           const RecordConfig(
             encoder: AudioEncoder.wav,
+            bitRate: 16000,
+            sampleRate: 11025,
+            numChannels: 1
           ),
           path: filePath);
       _logger.i('Started recording - $filePath');
