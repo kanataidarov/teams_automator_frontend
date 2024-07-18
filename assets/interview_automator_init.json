@@ -30,7 +30,7 @@
     {
       "id": 4,
       "name": "topic",
-      "value": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in Russian. Prepare Yourself to answer job interview questions.",
+      "value": "You have given part of interview session. Interview were held for middle java software developer position. Interview was in English. Prepare Yourself to answer job interview questions.",
       "title": "Conversation Topic",
       "section": "Open AI",
       "type": "text",
@@ -102,7 +102,7 @@
     {
       "id": 12,
       "name": "prompt_theory_intro",
-      "value": "You have given part of interview session. Interview was in Russian. Interview were held for middle Java software developer position.",
+      "value": "You have given part of interview session. Interview were held for middle Java software developer position.",
       "title": "Prompt - Theory intro",
       "section": "Open AI",
       "type": "text",
@@ -120,7 +120,7 @@
     {
       "id": 14,
       "name": "prompt_livecoding_intro",
-      "value": "You have given part of interview session. Interview was in Russian. Given session is livecoding. Livecoding session was held for middle Java software developer position.",
+      "value": "You have given part of interview session. Given session is livecoding. Livecoding session was held for middle Java software developer position.",
       "title": "Prompt - Livecoding intro",
       "section": "Open AI",
       "type": "text",
@@ -138,7 +138,7 @@
     {
       "id": 16,
       "name": "prompt_softskills_intro",
-      "value": "You have given part of interview session. Interview was in Russian. The interviewer, an employee of the HR department, asks questions on softskills.",
+      "value": "You have given part of interview session. The interviewer, an employee of the HR department, asks questions on softskills.",
       "title": "Prompt - Softskills intro",
       "section": "Open AI",
       "type": "text",
