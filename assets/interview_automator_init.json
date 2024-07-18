@@ -216,7 +216,7 @@
       "id": 5,
       "title": "Q&A Livecoding 2",
       "ord": 2,
-      "question": "Here is text transcription of given interview part:  \n\n{transcription} \n\nYIn given interview part interviewer describes coding assignment for candidate. You have to implement Java program based on interviewee's description of the program.",
+      "question": "Here is text transcription of given interview part:  \n\n{transcription} \n\nYIn given interview part interviewer describes coding assignment for candidate. You have to implement Java program based on interviewee's description of the program. Put comments where necessary.",
       "qintent": "SOLVE",
       "dialogue": "",
       "answer": "",
