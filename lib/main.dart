@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:interview_automator_frontend/screen/home.dart';
-import 'package:interview_automator_frontend/screen/qa_list.dart';
-import 'package:interview_automator_frontend/screen/settings.dart';
-import 'package:interview_automator_frontend/storage/db.dart';
-import 'package:interview_automator_frontend/storage/files.dart';
-import 'package:interview_automator_frontend/storage/memory.dart';
-import 'package:provider/provider.dart';
+import 'package:teams_automator_frontend/screen/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  DbHelper.instance.checkIfInit();
-  Files.instance.init();
-
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => Memory())],
-      child: const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,8 +23,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (ctx) => const MyHomePage(title: title),
-        '/settings': (ctx) => const SettingsPage(),
-        '/qa': (ctx) => const QaList()
       },
     );
   }

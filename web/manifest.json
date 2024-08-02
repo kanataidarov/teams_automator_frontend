@@ -1,6 +1,6 @@
 {
-    "name": "interview_automator_frontend",
-    "short_name": "interview_automator_frontend",
+    "name": "teams_automator_frontend",
+    "short_name": "teams_automator_frontend",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

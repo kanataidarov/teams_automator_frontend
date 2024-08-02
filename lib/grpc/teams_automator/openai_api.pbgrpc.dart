@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: interview_automator/openai_api.proto
+//  source: teams_automator/openai_api.proto
 //
 // @dart = 2.12
 
@@ -25,10 +25,6 @@ class OpenAiApiClient extends $grpc.Client {
       '/interview_automator.OpenAiApi/Transcribe',
       ($0.TranscribeRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.TranscribeResponse.fromBuffer(value));
-  static final _$chatBot = $grpc.ClientMethod<$0.ChatBotRequest, $0.ChatBotResponse>(
-      '/interview_automator.OpenAiApi/ChatBot',
-      ($0.ChatBotRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.ChatBotResponse.fromBuffer(value));
 
   OpenAiApiClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -38,10 +34,6 @@ class OpenAiApiClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.TranscribeResponse> transcribe($0.TranscribeRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$transcribe, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.ChatBotResponse> chatBot($0.ChatBotRequest request, {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$chatBot, request, options: options);
   }
 }
 
@@ -57,23 +49,11 @@ abstract class OpenAiApiServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.TranscribeRequest.fromBuffer(value),
         ($0.TranscribeResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ChatBotRequest, $0.ChatBotResponse>(
-        'ChatBot',
-        chatBot_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.ChatBotRequest.fromBuffer(value),
-        ($0.ChatBotResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.TranscribeResponse> transcribe_Pre($grpc.ServiceCall call, $async.Future<$0.TranscribeRequest> request) async {
     return transcribe(call, await request);
   }
 
-  $async.Future<$0.ChatBotResponse> chatBot_Pre($grpc.ServiceCall call, $async.Future<$0.ChatBotRequest> request) async {
-    return chatBot(call, await request);
-  }
-
   $async.Future<$0.TranscribeResponse> transcribe($grpc.ServiceCall call, $0.TranscribeRequest request);
-  $async.Future<$0.ChatBotResponse> chatBot($grpc.ServiceCall call, $0.ChatBotRequest request);
 }
